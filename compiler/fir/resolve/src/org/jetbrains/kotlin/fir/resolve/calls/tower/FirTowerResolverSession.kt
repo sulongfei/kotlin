@@ -26,7 +26,9 @@ import org.jetbrains.kotlin.fir.scopes.ProcessorAction
 import org.jetbrains.kotlin.fir.scopes.impl.FirCompositeScope
 import org.jetbrains.kotlin.fir.scopes.impl.FirLocalScope
 import org.jetbrains.kotlin.fir.scopes.impl.FirStaticScope
+import org.jetbrains.kotlin.fir.scopes.unsubstitutedScope
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.impl.FirImplicitBuiltinTypeRef
@@ -64,6 +66,10 @@ class FirTowerResolverSession internal constructor(
             components.fileImportsScope.asReversed()
         else
             components.typeParametersScopes.asReversed() + components.fileImportsScope.asReversed()
+
+    fun runResolutionForDelegatingConstructor(info: CallInfo, constructorClassSymbol: FirClassSymbol<*>) {
+        manager.enqueueResolverTask { runResolverForDelegatingConstructorCall(info, constructorClassSymbol) }
+    }
 
     fun runResolution(info: CallInfo) {
         when (val receiver = info.explicitReceiver) {
@@ -194,6 +200,22 @@ class FirTowerResolverSession internal constructor(
                 if (typeRef !is FirImplicitBuiltinTypeRef) {
                     runResolverForExpressionReceiver(info, resolvedQualifier)
                 }
+            }
+        }
+    }
+
+    private suspend fun runResolverForDelegatingConstructorCall(info: CallInfo, constructorClassSymbol: FirClassSymbol<*>) {
+        val scope = constructorClassSymbol.fir.unsubstitutedScope(session, components.scopeSession)
+        processLevel(
+            scope.toScopeTowerLevel(),
+            info, TowerGroup.Implicit(-1)
+        )
+        if (constructorClassSymbol is FirRegularClassSymbol) {
+            for ((implicitReceiverValue, depth) in implicitReceiversUsableAsValues) {
+                processLevel(
+                    implicitReceiverValue.toMemberScopeTowerLevel(),
+                    info.copy(name = constructorClassSymbol.fir.name), TowerGroup.Implicit(depth)
+                )
             }
         }
     }
