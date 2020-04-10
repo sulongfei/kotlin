@@ -20,7 +20,11 @@ import org.jetbrains.kotlin.fir.resolve.transformers.body.resolve.firUnsafe
 import org.jetbrains.kotlin.fir.scopes.FirScope
 import org.jetbrains.kotlin.fir.scopes.ProcessorAction
 import org.jetbrains.kotlin.fir.scopes.impl.FirCompositeScope
+import org.jetbrains.kotlin.fir.scopes.impl.FirLocalScope
+import org.jetbrains.kotlin.fir.scopes.impl.FirStaticScope
+import org.jetbrains.kotlin.fir.scopes.unsubstitutedScope
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.impl.FirImplicitBuiltinTypeRef
@@ -52,6 +56,10 @@ class FirTowerResolverSession internal constructor(
         reversedTowerDataElements.withIndex().mapNotNull { (index, element) ->
             element.implicitReceiver?.let { ImplicitReceiver(it, index) }
         }
+    }
+
+    fun runResolutionForDelegatingConstructor(info: CallInfo, constructorClassSymbol: FirClassSymbol<*>) {
+        manager.enqueueResolverTask { runResolverForDelegatingConstructorCall(info, constructorClassSymbol) }
     }
 
     fun runResolution(info: CallInfo) {
@@ -183,6 +191,25 @@ class FirTowerResolverSession internal constructor(
                 if (typeRef !is FirImplicitBuiltinTypeRef) {
                     runResolverForExpressionReceiver(info, resolvedQualifier)
                 }
+            }
+        }
+    }
+
+    private suspend fun runResolverForDelegatingConstructorCall(info: CallInfo, constructorClassSymbol: FirClassSymbol<*>) {
+        val scope = constructorClassSymbol.fir.unsubstitutedScope(session, components.scopeSession)
+        // Search for non-inner constructors only
+        processLevel(
+            scope.toScopeTowerLevel(),
+            info, TowerGroup.Implicit(0)
+        )
+        // Search for inner constructors only
+        if (constructorClassSymbol is FirRegularClassSymbol) {
+            // 1 because we search for inner constructor in outer class
+            implicitReceiversUsableAsValues.getOrNull(1)?.let { (implicitReceiverValue) ->
+                processLevel(
+                    implicitReceiverValue.toMemberScopeTowerLevel(),
+                    info.copy(name = constructorClassSymbol.fir.name), TowerGroup.Implicit(1)
+                )
             }
         }
     }
