@@ -1,4 +1,4 @@
 class Outer { inner class Inner }
 fun test() {
-    val x = object : Outer.Inner() { }
+    val x = object : <!INAPPLICABLE_CANDIDATE!>Outer.Inner<!>() { }
 }

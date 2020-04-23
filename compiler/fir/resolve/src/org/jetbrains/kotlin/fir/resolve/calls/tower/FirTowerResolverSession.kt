@@ -439,7 +439,12 @@ class FirTowerResolverSession internal constructor(
         info: CallInfo
     ) {
         processLevel(
-            explicitReceiverValue.toMemberScopeTowerLevel(), info, TowerGroup.Member, ExplicitReceiverKind.DISPATCH_RECEIVER
+            explicitReceiverValue.toMemberScopeTowerLevel(),
+            info, TowerGroup.Member, ExplicitReceiverKind.DISPATCH_RECEIVER
+        )
+        processLevel(
+            explicitReceiverValue.toMemberScopeTowerLevel(extensionReceiver = explicitReceiverValue),
+            info, TowerGroup.Member.Member, ExplicitReceiverKind.BOTH_RECEIVERS
         )
     }
 

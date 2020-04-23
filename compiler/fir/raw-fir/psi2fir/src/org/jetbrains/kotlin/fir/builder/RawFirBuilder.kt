@@ -545,6 +545,17 @@ class RawFirBuilder(
                 source = constructorSource
                 session = baseSession
                 returnTypeRef = delegatedSelfTypeRef
+                if (owner.hasModifier(INNER_KEYWORD)) {
+                    val outerClassId = this@RawFirBuilder.context.currentClassId.outerClassId
+                    if (outerClassId != null) {
+                        receiverTypeRef = buildResolvedTypeRef {
+                            source = this@buildPrimaryConstructor.source
+                            type = ConeClassLikeTypeImpl(
+                                ConeClassLikeLookupTagImpl(outerClassId), emptyArray(), isNullable = false
+                            )
+                        }
+                    }
+                }
                 this.status = status
                 symbol = FirConstructorSymbol(callableIdForClassConstructor())
                 delegatedConstructor = firDelegatedCall
@@ -960,6 +971,17 @@ class RawFirBuilder(
                 source = this@toFirConstructor.toFirSourceElement()
                 session = baseSession
                 returnTypeRef = delegatedSelfTypeRef
+                if (owner.hasModifier(INNER_KEYWORD)) {
+                    val outerClassId = this@RawFirBuilder.context.currentClassId.outerClassId
+                    if (outerClassId != null) {
+                        receiverTypeRef = buildResolvedTypeRef {
+                            source = this@buildConstructor.source
+                            type = ConeClassLikeTypeImpl(
+                                ConeClassLikeLookupTagImpl(outerClassId), emptyArray(), isNullable = false
+                            )
+                        }
+                    }
+                }
                 val explicitVisibility = visibility
                 status = FirDeclarationStatusImpl(explicitVisibility, Modality.FINAL).apply {
                     isExpect = hasExpectModifier()

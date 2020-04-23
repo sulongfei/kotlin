@@ -10,7 +10,7 @@ FILE: inner.kt
         }
 
         public final fun bar(): R|kotlin/Unit| {
-            lval i: R|Owner.Inner| = this@R|/Owner|.R|/Owner.Inner.Inner|()
+            lval i: R|Owner.Inner| = (this@R|/Owner|, this@R|/Owner|).R|/Owner.Inner.Inner|()
             R|<local>/i|.R|/Owner.Inner.baz|()
         }
 
@@ -43,6 +43,6 @@ FILE: inner.kt
         R|<local>/o|.R|/Owner.foo|()
         lval err: <ERROR TYPE REF: Unresolved name: Inner> = Q|Owner|.<Unresolved name: Inner>#()
         R|<local>/err|.<Unresolved name: baz>#()
-        lval i: R|Owner.Inner| = R|<local>/o|.R|/Owner.Inner.Inner|()
+        lval i: R|Owner.Inner| = (R|<local>/o|, R|<local>/o|).R|/Owner.Inner.Inner|()
         R|<local>/i|.R|/Owner.Inner.gau|()
     }
