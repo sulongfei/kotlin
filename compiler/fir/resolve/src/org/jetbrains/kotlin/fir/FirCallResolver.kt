@@ -127,7 +127,6 @@ class FirCallResolver(
         )
         towerResolver.reset()
         val result = towerResolver.runResolver(
-            implicitReceiverStack.receiversAsReversed(),
             info,
         )
         val bestCandidates = result.bestCandidates()
@@ -231,7 +230,6 @@ class FirCallResolver(
         // No reset here!
         val localCollector = CandidateCollector(this, resolutionStageRunner)
         val result = towerResolver.runResolver(
-            implicitReceiverStack.receiversAsReversed(),
             info,
             collector = localCollector,
             manager = TowerResolveManager(localCollector),
