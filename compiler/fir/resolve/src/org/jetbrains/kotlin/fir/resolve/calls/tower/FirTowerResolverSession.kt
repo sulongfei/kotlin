@@ -362,7 +362,11 @@ class FirTowerResolverSession internal constructor(
         val explicitReceiverValue = ExpressionReceiverValue(receiver)
 
         processExtensionsThatHideMembers(info, explicitReceiverValue)
-        processMembersForExplicitReceiver(explicitReceiverValue, info)
+
+        // Member scope of expression receiver
+        processLevel(
+            explicitReceiverValue.toMemberScopeTowerLevel(), info, TowerGroup.Member, ExplicitReceiverKind.DISPATCH_RECEIVER
+        )
 
         val shouldProcessExplicitReceiverScopeOnly =
             info.callKind == CallKind.Function && info.explicitReceiver?.typeRef?.coneTypeSafe<ConeIntegerLiteralType>() != null
@@ -414,15 +418,6 @@ class FirTowerResolverSession internal constructor(
         )
 
         return result
-    }
-
-    private suspend fun processMembersForExplicitReceiver(
-        explicitReceiverValue: ExpressionReceiverValue,
-        info: CallInfo
-    ) {
-        processLevel(
-            explicitReceiverValue.toMemberScopeTowerLevel(), info, TowerGroup.Member, ExplicitReceiverKind.DISPATCH_RECEIVER
-        )
     }
 
     private suspend fun processCombinationOfReceivers(
