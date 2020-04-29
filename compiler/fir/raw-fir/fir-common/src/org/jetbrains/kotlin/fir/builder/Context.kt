@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.fir.FirLabel
 import org.jetbrains.kotlin.fir.FirLoopTarget
 import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
+import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -26,4 +27,5 @@ class Context<T> {
     val firLoopTargets = mutableListOf<FirLoopTarget>()
     var capturedTypeParameters = persistentListOf<FirTypeParameterSymbol>()
     val arraySetArgument = mutableMapOf<T, FirExpression>()
+    val firSelfClassTypes = mutableListOf<FirResolvedTypeRef>()
 }

@@ -62,6 +62,15 @@ abstract class BaseFirBuilder<T>(val baseSession: FirSession, val context: Conte
         }
     }
 
+    inline fun <T> withSelfClassType(type: FirResolvedTypeRef, l: () -> T): T {
+        context.firSelfClassTypes += type
+        return try {
+            l()
+        } finally {
+            context.firSelfClassTypes.removeAt(context.firSelfClassTypes.size - 1)
+        }
+    }
+
     inline fun <T> withCapturedTypeParameters(block: () -> T): T {
         val previous = context.capturedTypeParameters
         val result = block()
