@@ -546,7 +546,8 @@ class RawFirBuilder(
                 session = baseSession
                 returnTypeRef = delegatedSelfTypeRef
                 if (owner.hasModifier(INNER_KEYWORD)) {
-                    receiverTypeRef = context.firSelfClassTypes.last()
+                    // The last but one self type...
+                    receiverTypeRef = context.firSelfClassTypes.getOrNull(context.firSelfClassTypes.size - 2)
                 }
                 this.status = status
                 symbol = FirConstructorSymbol(callableIdForClassConstructor())
@@ -969,7 +970,9 @@ class RawFirBuilder(
                 session = baseSession
                 returnTypeRef = delegatedSelfTypeRef
                 if (owner.hasModifier(INNER_KEYWORD)) {
-                    receiverTypeRef = this@RawFirBuilder.context.firSelfClassTypes.last()
+                    val context = this@RawFirBuilder.context
+                    // The last but one self type...
+                    receiverTypeRef = context.firSelfClassTypes.getOrNull(context.firSelfClassTypes.size - 2)
                 }
                 val explicitVisibility = visibility
                 status = FirDeclarationStatusImpl(explicitVisibility, Modality.FINAL).apply {
