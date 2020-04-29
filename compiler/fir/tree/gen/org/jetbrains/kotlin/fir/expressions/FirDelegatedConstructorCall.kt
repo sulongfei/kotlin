@@ -22,7 +22,7 @@ abstract class FirDelegatedConstructorCall : FirPureAbstractElement(), FirResolv
     abstract override val annotations: List<FirAnnotationCall>
     abstract override val argumentList: FirArgumentList
     abstract val constructedTypeRef: FirTypeRef
-    abstract val dispatchReceiver: FirExpression
+    abstract val extensionReceiver: FirExpression
     abstract val isThis: Boolean
     abstract val isSuper: Boolean
 
@@ -38,5 +38,5 @@ abstract class FirDelegatedConstructorCall : FirPureAbstractElement(), FirResolv
 
     abstract override fun <D> transformAnnotations(transformer: FirTransformer<D>, data: D): FirDelegatedConstructorCall
 
-    abstract fun <D> transformDispatchReceiver(transformer: FirTransformer<D>, data: D): FirDelegatedConstructorCall
+    abstract fun <D> transformExtensionReceiver(transformer: FirTransformer<D>, data: D): FirDelegatedConstructorCall
 }

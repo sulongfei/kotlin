@@ -314,9 +314,8 @@ class FirCallResolver(
         return call.transformCalleeReference(StoreNameReference, nameReference).apply {
             val singleCandidate = reducedCandidates.singleOrNull()
             if (singleCandidate != null) {
-                // It's a bit hacky because tower resolve has to consider outer class receiver
-                // as 'extension' receiver of delegating constructor
-                transformDispatchReceiver(StoreReceiver, singleCandidate.extensionReceiverExpression())
+                // NB: do we need this explicit transform? Probably yes...
+                transformExtensionReceiver(StoreReceiver, singleCandidate.extensionReceiverExpression())
             }
         }
     }

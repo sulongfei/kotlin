@@ -34,7 +34,7 @@ class FirDelegatedConstructorCallBuilder : FirCallBuilder, FirAnnotationContaine
     override val annotations: MutableList<FirAnnotationCall> = mutableListOf()
     override var argumentList: FirArgumentList = FirEmptyArgumentList
     lateinit var constructedTypeRef: FirTypeRef
-    var dispatchReceiver: FirExpression = FirNoReceiverExpression
+    var extensionReceiver: FirExpression = FirNoReceiverExpression
     var isThis: Boolean by kotlin.properties.Delegates.notNull<Boolean>()
 
     override fun build(): FirDelegatedConstructorCall {
@@ -43,7 +43,7 @@ class FirDelegatedConstructorCallBuilder : FirCallBuilder, FirAnnotationContaine
             annotations,
             argumentList,
             constructedTypeRef,
-            dispatchReceiver,
+            extensionReceiver,
             isThis,
         )
     }

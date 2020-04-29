@@ -239,7 +239,8 @@ internal class ClassMemberGenerator(
                     startOffset, endOffset, constructedIrType, "Cannot find delegated constructor call"
                 )
             }
-        val firDispatchReceiver = dispatchReceiver
+        // Hacky replacement of FIR extension receiver to IR dispatch receiver (special case)
+        val firDispatchReceiver = extensionReceiver
         return convertWithOffsets { startOffset, endOffset ->
             val irConstructorSymbol = declarationStorage.getIrFunctionSymbol(constructorSymbol) as IrConstructorSymbol
             if (constructorSymbol.fir.isFromEnumClass || constructorSymbol.fir.returnTypeRef.isEnum) {

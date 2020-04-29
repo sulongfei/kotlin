@@ -26,7 +26,7 @@ internal class FirDelegatedConstructorCallImpl(
     override val annotations: MutableList<FirAnnotationCall>,
     override var argumentList: FirArgumentList,
     override var constructedTypeRef: FirTypeRef,
-    override var dispatchReceiver: FirExpression,
+    override var extensionReceiver: FirExpression,
     override val isThis: Boolean,
 ) : FirDelegatedConstructorCall() {
     override var calleeReference: FirReference = if (isThis) FirExplicitThisReference(source, null) else FirExplicitSuperReference(source, constructedTypeRef)
@@ -57,8 +57,8 @@ internal class FirDelegatedConstructorCallImpl(
         return this
     }
 
-    override fun <D> transformDispatchReceiver(transformer: FirTransformer<D>, data: D): FirDelegatedConstructorCallImpl {
-        dispatchReceiver = dispatchReceiver.transformSingle(transformer, data)
+    override fun <D> transformExtensionReceiver(transformer: FirTransformer<D>, data: D): FirDelegatedConstructorCallImpl {
+        extensionReceiver = extensionReceiver.transformSingle(transformer, data)
         return this
     }
 
