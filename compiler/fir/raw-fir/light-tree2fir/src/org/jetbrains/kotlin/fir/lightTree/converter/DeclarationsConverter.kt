@@ -438,48 +438,51 @@ class DeclarationsConverter(
 
                     this.superTypeRefs += superTypeRefs
 
-                    val secondaryConstructors = classBody.getChildNodesByType(SECONDARY_CONSTRUCTOR)
-                    val classWrapper = ClassWrapper(
-                        className, modifiers, classKind, classBuilder,
-                        hasPrimaryConstructor = primaryConstructor != null,
-                        hasSecondaryConstructor = secondaryConstructors.isNotEmpty(),
-                        hasDefaultConstructor = if (primaryConstructor != null) !primaryConstructor!!.hasValueParameters()
-                        else secondaryConstructors.isEmpty() || secondaryConstructors.any { !it.hasValueParameters() },
-                        delegatedSelfTypeRef = selfType,
-                        delegatedSuperTypeRef = delegatedSuperTypeRef ?: buildImplicitTypeRef(),
-                        superTypeCallEntry = superTypeCallEntry
-                    )
-                    //parse primary constructor
-                    val primaryConstructorWrapper = convertPrimaryConstructor(primaryConstructor, classWrapper, delegatedConstructorSource)
-                    val firPrimaryConstructor = primaryConstructorWrapper?.firConstructor
-                    firPrimaryConstructor?.let { declarations += it }
+                    withSelfClassType(selfType) {
+                        val secondaryConstructors = classBody.getChildNodesByType(SECONDARY_CONSTRUCTOR)
+                        val classWrapper = ClassWrapper(
+                            className, modifiers, classKind, classBuilder,
+                            hasPrimaryConstructor = primaryConstructor != null,
+                            hasSecondaryConstructor = secondaryConstructors.isNotEmpty(),
+                            hasDefaultConstructor = if (primaryConstructor != null) !primaryConstructor!!.hasValueParameters()
+                            else secondaryConstructors.isEmpty() || secondaryConstructors.any { !it.hasValueParameters() },
+                            delegatedSelfTypeRef = selfType,
+                            delegatedSuperTypeRef = delegatedSuperTypeRef ?: buildImplicitTypeRef(),
+                            superTypeCallEntry = superTypeCallEntry
+                        )
+                        //parse primary constructor
+                        val primaryConstructorWrapper =
+                            convertPrimaryConstructor(primaryConstructor, classWrapper, delegatedConstructorSource)
+                        val firPrimaryConstructor = primaryConstructorWrapper?.firConstructor
+                        firPrimaryConstructor?.let { declarations += it }
 
-                    val properties = mutableListOf<FirProperty>()
-                    if (primaryConstructor != null && firPrimaryConstructor != null) {
-                        //parse properties
-                        properties += primaryConstructorWrapper.valueParameters
-                            .filter { it.hasValOrVar() }
-                            .map { it.toFirProperty(baseSession, callableIdForName(it.firValueParameter.name)) }
-                        addDeclarations(properties)
-                    }
+                        val properties = mutableListOf<FirProperty>()
+                        if (primaryConstructor != null && firPrimaryConstructor != null) {
+                            //parse properties
+                            properties += primaryConstructorWrapper.valueParameters
+                                .filter { it.hasValOrVar() }
+                                .map { it.toFirProperty(baseSession, callableIdForName(it.firValueParameter.name)) }
+                            addDeclarations(properties)
+                        }
 
-                    //parse declarations
-                    classBody?.let {
-                        addDeclarations(convertClassBody(it, classWrapper))
-                    }
+                        //parse declarations
+                        classBody?.let {
+                            addDeclarations(convertClassBody(it, classWrapper))
+                        }
 
-                    //parse data class
-                    if (modifiers.isDataClass() && firPrimaryConstructor != null) {
-                        val zippedParameters = properties.map { it.source?.lightNode!! to it }
-                        DataClassMembersGenerator(
-                            baseSession,
-                            classNode,
-                            this,
-                            firPrimaryConstructor,
-                            zippedParameters,
-                            context.packageFqName,
-                            context.className
-                        ).generate()
+                        //parse data class
+                        if (modifiers.isDataClass() && firPrimaryConstructor != null) {
+                            val zippedParameters = properties.map { it.source?.lightNode!! to it }
+                            DataClassMembersGenerator(
+                                baseSession,
+                                classNode,
+                                this,
+                                firPrimaryConstructor,
+                                zippedParameters,
+                                context.packageFqName,
+                                context.className
+                            ).generate()
+                        }
                     }
 
                     if (modifiers.isEnum()) {
@@ -536,22 +539,24 @@ class DeclarationsConverter(
                 this.superTypeRefs += superTypeRefs
                 typeRef = delegatedSelfType
 
-                val classWrapper = ClassWrapper(
-                    SpecialNames.NO_NAME_PROVIDED, modifiers, ClassKind.OBJECT, this,
-                    hasPrimaryConstructor = false,
-                    hasSecondaryConstructor = classBody.getChildNodesByType(SECONDARY_CONSTRUCTOR).isNotEmpty(),
-                    hasDefaultConstructor = false,
-                    delegatedSelfTypeRef = delegatedSelfType,
-                    delegatedSuperTypeRef = delegatedSuperType,
-                    superTypeCallEntry = superTypeCallEntry
-                )
-                //parse primary constructor
-                convertPrimaryConstructor(primaryConstructor, classWrapper, delegatedConstructorSource)
-                    ?.let { this.declarations += it.firConstructor }
+                withSelfClassType(delegatedSelfType) {
+                    val classWrapper = ClassWrapper(
+                        SpecialNames.NO_NAME_PROVIDED, modifiers, ClassKind.OBJECT, this,
+                        hasPrimaryConstructor = false,
+                        hasSecondaryConstructor = classBody.getChildNodesByType(SECONDARY_CONSTRUCTOR).isNotEmpty(),
+                        hasDefaultConstructor = false,
+                        delegatedSelfTypeRef = delegatedSelfType,
+                        delegatedSuperTypeRef = delegatedSuperType,
+                        superTypeCallEntry = superTypeCallEntry
+                    )
+                    //parse primary constructor
+                    convertPrimaryConstructor(primaryConstructor, classWrapper, delegatedConstructorSource)
+                        ?.let { this.declarations += it.firConstructor }
 
-                //parse declarations
-                classBody?.let {
-                    this.declarations += convertClassBody(it, classWrapper)
+                    //parse declarations
+                    classBody?.let {
+                        this.declarations += convertClassBody(it, classWrapper)
+                    }
                 }
             }
         }
@@ -612,9 +617,11 @@ class DeclarationsConverter(
                         delegatedSuperTypeRef = classWrapper.delegatedSelfTypeRef,
                         superTypeCallEntry = enumSuperTypeCallEntry
                     )
-                    superTypeRefs += enumClassWrapper.delegatedSuperTypeRef
-                    convertPrimaryConstructor(null, enumClassWrapper, null)?.let { declarations += it.firConstructor }
-                    classBodyNode?.also { declarations += convertClassBody(it, enumClassWrapper) }
+                    withSelfClassType(enumClassWrapper.delegatedSelfTypeRef as FirResolvedTypeRef) {
+                        superTypeRefs += enumClassWrapper.delegatedSuperTypeRef
+                        convertPrimaryConstructor(null, enumClassWrapper, null)?.let { declarations += it.firConstructor }
+                        classBodyNode?.also { declarations += convertClassBody(it, enumClassWrapper) }
+                    }
                 }
             }
         }
@@ -694,6 +701,9 @@ class DeclarationsConverter(
                 source = primaryConstructor?.toFirSourceElement()
                 session = baseSession
                 returnTypeRef = classWrapper.delegatedSelfTypeRef
+                if (classWrapper.isInner()) {
+                    receiverTypeRef = context.firSelfClassTypes.getOrNull(context.firSelfClassTypes.size - 2)
+                }
                 this.status = status
                 symbol = FirConstructorSymbol(callableIdForClassConstructor())
                 annotations += modifiers.annotations
@@ -759,6 +769,9 @@ class DeclarationsConverter(
             source = secondaryConstructor.toFirSourceElement()
             session = baseSession
             returnTypeRef = delegatedSelfTypeRef
+            if (classWrapper.isInner()) {
+                receiverTypeRef = context.firSelfClassTypes.getOrNull(context.firSelfClassTypes.size - 2)
+            }
             this.status = status
             symbol = FirConstructorSymbol(callableIdForClassConstructor())
             delegatedConstructor = constructorDelegationCall
