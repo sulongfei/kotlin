@@ -1,0 +1,32 @@
+FILE: test.kt
+    public open class Base : R|kotlin/Any| {
+        public constructor(): R|Base| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final inner class Inner : R|kotlin/Any| {
+            public constructor(): R|Base.Inner| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+    }
+    public final class Derived : R|Base| {
+        public constructor(): R|Derived| {
+            super<R|Base|>()
+        }
+
+        public final val test: R|Base.Inner| = this@R|/Derived|.R|/Base.Inner.Inner|()
+            public get(): R|Base.Inner|
+
+    }
+    public final class JavaDerived : R|JavaBase| {
+        public constructor(): R|JavaDerived| {
+            super<R|JavaBase|>()
+        }
+
+        public final val test: R|JavaBase.Inner| = this@R|/JavaDerived|.R|/JavaBase.Inner.Inner|()
+            public get(): R|JavaBase.Inner|
+
+    }

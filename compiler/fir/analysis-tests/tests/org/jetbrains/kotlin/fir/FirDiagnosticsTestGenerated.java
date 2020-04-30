@@ -1629,6 +1629,11 @@ public class FirDiagnosticsTestGenerated extends AbstractFirDiagnosticsTest {
             runTest("compiler/fir/analysis-tests/testData/resolve/problems/flexibleTypeVarAgainstNull.kt");
         }
 
+        @TestMetadata("innerFromDerived.kt")
+        public void testInnerFromDerived() throws Exception {
+            runTest("compiler/fir/analysis-tests/testData/resolve/problems/innerFromDerived.kt");
+        }
+
         @TestMetadata("javaAccessorConversion.kt")
         public void testJavaAccessorConversion() throws Exception {
             runTest("compiler/fir/analysis-tests/testData/resolve/problems/javaAccessorConversion.kt");

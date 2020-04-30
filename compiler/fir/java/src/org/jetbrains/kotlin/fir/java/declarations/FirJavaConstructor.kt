@@ -33,13 +33,13 @@ class FirJavaConstructor @FirImplementationDetail constructor(
     override val symbol: FirConstructorSymbol,
     override val isPrimary: Boolean,
     override var returnTypeRef: FirTypeRef,
+    override val receiverTypeRef: FirTypeRef?,
     override val valueParameters: MutableList<FirValueParameter>,
     override val typeParameters: MutableList<FirTypeParameterRef>,
     override val annotations: MutableList<FirAnnotationCall>,
     override var status: FirDeclarationStatus,
     override var resolvePhase: FirResolvePhase,
 ) : FirConstructor() {
-    override val receiverTypeRef: FirTypeRef? get() = null
 
     init {
         symbol.bind(this)
@@ -143,6 +143,7 @@ class FirJavaConstructorBuilder : FirConstructorBuilder() {
             symbol,
             isPrimary,
             returnTypeRef,
+            receiverTypeRef,
             valueParameters,
             typeParameters,
             annotations,
@@ -174,13 +175,6 @@ class FirJavaConstructorBuilder : FirConstructorBuilder() {
 
     @Deprecated("Modification of 'status' has no impact for FirJavaConstructorBuilder", level = DeprecationLevel.HIDDEN)
     override var status: FirDeclarationStatus
-        get() = throw IllegalStateException()
-        set(value) {
-            throw IllegalStateException()
-        }
-
-    @Deprecated("Modification of 'receiverTypeRef' has no impact for FirJavaConstructorBuilder", level = DeprecationLevel.HIDDEN)
-    override var receiverTypeRef: FirTypeRef?
         get() = throw IllegalStateException()
         set(value) {
             throw IllegalStateException()

@@ -12,6 +12,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.declarations.FirConstructor
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.declarations.FirTypeParameter
 import org.jetbrains.kotlin.fir.declarations.addDefaultBoundIfNecessary
@@ -247,7 +248,13 @@ class JavaSymbolProvider(
                             symbol = constructorSymbol
                             this.visibility = visibility
                             this.isPrimary = isPrimary
-                            isInner = javaClass.outerClass != null && !javaClass.isStatic
+                            if (parentClassSymbol != null && !javaClass.isStatic) {
+                                isInner = true
+                                receiverTypeRef =
+                                    parentClassSymbol.fir.declarations.filterIsInstance<FirConstructor>().firstOrNull()?.returnTypeRef
+                            } else {
+                                isInner = false
+                            }
                             returnTypeRef = buildResolvedTypeRef {
                                 type = firSymbol.constructType(
                                     this@buildJavaClass.typeParameters.map { ConeTypeParameterTypeImpl(it.symbol.toLookupTag(), false) }.toTypedArray(),

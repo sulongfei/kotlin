@@ -170,9 +170,11 @@ class JavaClassEnhancementScope(
         val overriddenMembers = (firMethod as? FirSimpleFunction)?.overriddenMembers().orEmpty()
         val hasReceiver = overriddenMembers.any { it.receiverTypeRef != null }
 
-        val newReceiverTypeRef = if (firMethod is FirJavaMethod && hasReceiver) {
-            enhanceReceiverType(firMethod, overriddenMembers, memberContext)
-        } else null
+        val newReceiverTypeRef = when {
+            firMethod is FirJavaConstructor -> firMethod.receiverTypeRef
+            firMethod is FirJavaMethod && hasReceiver -> enhanceReceiverType(firMethod, overriddenMembers, memberContext)
+            else -> null
+        }
         val newReturnTypeRef = if (firMethod !is FirJavaMethod) {
             firMethod.returnTypeRef
         } else {
@@ -214,6 +216,7 @@ class JavaClassEnhancementScope(
                         source = firMethod.source
                         session = this@JavaClassEnhancementScope.session
                         returnTypeRef = newReturnTypeRef
+                        receiverTypeRef = newReceiverTypeRef
                         status = FirDeclarationStatusImpl(firMethod.visibility, Modality.FINAL).apply {
                             isExpect = false
                             isActual = false
@@ -226,6 +229,7 @@ class JavaClassEnhancementScope(
                         source = firMethod.source
                         session = this@JavaClassEnhancementScope.session
                         returnTypeRef = newReturnTypeRef
+                        receiverTypeRef = newReceiverTypeRef
                         status = firMethod.status
                         this.symbol = symbol
                     }
