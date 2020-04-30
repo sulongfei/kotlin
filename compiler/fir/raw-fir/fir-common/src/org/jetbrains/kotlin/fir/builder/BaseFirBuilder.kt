@@ -179,10 +179,20 @@ abstract class BaseFirBuilder<T>(val baseSession: FirSession, val context: Conte
         }
     }
 
-    fun constructorTypeParametersFromConstructedClass(ownerTypeParameters: List<FirTypeParameterRef>): List<FirTypeParameterRef> {
+    fun constructorTypeParametersFromConstructedClass(
+        ownerTypeParameters: List<FirTypeParameterRef>,
+        isInnerConstructor: Boolean
+    ): List<FirTypeParameterRef> {
         return ownerTypeParameters.mapNotNull {
-            val declaredTypeParameter = (it as? FirTypeParameter) ?: return@mapNotNull null
-            buildConstructedClassTypeParameterRef { symbol = declaredTypeParameter.symbol }
+            when (it) {
+                is FirTypeParameter -> {
+                    buildConstructedClassTypeParameterRef { symbol = it.symbol }
+                }
+                else -> {
+                    if (!isInnerConstructor) return@mapNotNull null
+                    buildConstructedClassTypeParameterRef { symbol = it.symbol }
+                }
+            }
         }
     }
 

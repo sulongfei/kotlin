@@ -5,8 +5,10 @@
 
 package org.jetbrains.kotlin.fir.resolve.calls
 
+import org.jetbrains.kotlin.fir.declarations.FirConstructor
 import org.jetbrains.kotlin.fir.declarations.FirTypeParameterRefsOwner
-import org.jetbrains.kotlin.fir.declarations.FirTypeParametersOwner
+import org.jetbrains.kotlin.fir.declarations.isInner
+import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccess
 import org.jetbrains.kotlin.fir.types.FirTypeProjection
 import org.jetbrains.kotlin.fir.types.impl.FirTypePlaceholderProjection
 
@@ -28,13 +30,17 @@ sealed class TypeArgumentMapping {
 
 internal object MapTypeArguments : ResolutionStage() {
     override suspend fun check(candidate: Candidate, sink: CheckerSink, callInfo: CallInfo) {
-        val typeArguments = callInfo.typeArguments
+        val owner = candidate.symbol.fir as FirTypeParameterRefsOwner
+        val typeArguments = if (owner is FirConstructor && owner.isInner) {
+            callInfo.typeArguments + (callInfo.explicitReceiver as? FirQualifiedAccess)?.typeArguments.orEmpty()
+        } else {
+            callInfo.typeArguments
+        }
         if (typeArguments.isEmpty()) {
             candidate.typeArgumentMapping = TypeArgumentMapping.NoExplicitArguments
             return
         }
 
-        val owner = candidate.symbol.fir as FirTypeParameterRefsOwner
 
         if (typeArguments.size == owner.typeParameters.size || callInfo.callKind == CallKind.DelegatingConstructorCall) {
             candidate.typeArgumentMapping = TypeArgumentMapping.Mapped(typeArguments)

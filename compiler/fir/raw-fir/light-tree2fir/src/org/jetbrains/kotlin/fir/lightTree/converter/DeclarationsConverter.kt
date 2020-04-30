@@ -697,7 +697,9 @@ class DeclarationsConverter(
                 this.status = status
                 symbol = FirConstructorSymbol(callableIdForClassConstructor())
                 annotations += modifiers.annotations
-                typeParameters += constructorTypeParametersFromConstructedClass(classWrapper.classBuilder.typeParameters)
+                typeParameters += constructorTypeParametersFromConstructedClass(
+                    classWrapper.classBuilder.typeParameters, classWrapper.isInner()
+                )
                 this.valueParameters += valueParameters.map { it.firValueParameter }
                 delegatedConstructor = firDelegatedCall
             }, valueParameters
@@ -763,7 +765,9 @@ class DeclarationsConverter(
 
             context.firFunctionTargets += target
             annotations += modifiers.annotations
-            typeParameters += constructorTypeParametersFromConstructedClass(classWrapper.classBuilder.typeParameters)
+            typeParameters += constructorTypeParametersFromConstructedClass(
+                classWrapper.classBuilder.typeParameters, classWrapper.isInner()
+            )
             valueParameters += firValueParameters.map { it.firValueParameter }
             val (body, _) = convertFunctionBody(block, null)
             this.body = body

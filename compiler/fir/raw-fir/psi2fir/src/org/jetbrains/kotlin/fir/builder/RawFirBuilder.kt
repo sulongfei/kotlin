@@ -534,10 +534,11 @@ class RawFirBuilder(
             }
 
             val explicitVisibility = this?.visibility
+            val isInnerConstructor = owner.hasModifier(INNER_KEYWORD)
             val status = FirDeclarationStatusImpl(explicitVisibility ?: defaultVisibility(), Modality.FINAL).apply {
                 isExpect = this@toFirConstructor?.hasExpectModifier() ?: false
                 isActual = this@toFirConstructor?.hasActualModifier() ?: false
-                isInner = owner.hasModifier(INNER_KEYWORD)
+                isInner = isInnerConstructor
                 isFromSealedClass = owner.hasModifier(SEALED_KEYWORD) && explicitVisibility !== Visibilities.PRIVATE
                 isFromEnumClass = owner.hasModifier(ENUM_KEYWORD)
             }
@@ -545,14 +546,14 @@ class RawFirBuilder(
                 source = constructorSource
                 session = baseSession
                 returnTypeRef = delegatedSelfTypeRef
-                if (owner.hasModifier(INNER_KEYWORD)) {
+                if (isInnerConstructor) {
                     // The last but one self type...
                     receiverTypeRef = context.firSelfClassTypes.getOrNull(context.firSelfClassTypes.size - 2)
                 }
                 this.status = status
                 symbol = FirConstructorSymbol(callableIdForClassConstructor())
                 delegatedConstructor = firDelegatedCall
-                typeParameters += constructorTypeParametersFromConstructedClass(ownerTypeParameters)
+                typeParameters += constructorTypeParametersFromConstructedClass(ownerTypeParameters, isInnerConstructor)
                 this@toFirConstructor?.extractAnnotationsTo(this)
                 this@toFirConstructor?.extractValueParametersTo(this)
             }
@@ -969,7 +970,8 @@ class RawFirBuilder(
                 source = this@toFirConstructor.toFirSourceElement()
                 session = baseSession
                 returnTypeRef = delegatedSelfTypeRef
-                if (owner.hasModifier(INNER_KEYWORD)) {
+                val isInnerConstructor = owner.hasModifier(INNER_KEYWORD)
+                if (isInnerConstructor) {
                     val context = this@RawFirBuilder.context
                     // The last but one self type...
                     receiverTypeRef = context.firSelfClassTypes.getOrNull(context.firSelfClassTypes.size - 2)
@@ -978,7 +980,7 @@ class RawFirBuilder(
                 status = FirDeclarationStatusImpl(explicitVisibility, Modality.FINAL).apply {
                     isExpect = hasExpectModifier()
                     isActual = hasActualModifier()
-                    isInner = owner.hasModifier(INNER_KEYWORD)
+                    isInner = isInnerConstructor
                     isFromSealedClass = owner.hasModifier(SEALED_KEYWORD) && explicitVisibility !== Visibilities.PRIVATE
                     isFromEnumClass = owner.hasModifier(ENUM_KEYWORD)
                 }
@@ -990,7 +992,7 @@ class RawFirBuilder(
                 )
                 this@RawFirBuilder.context.firFunctionTargets += target
                 extractAnnotationsTo(this)
-                typeParameters += constructorTypeParametersFromConstructedClass(ownerTypeParameters)
+                typeParameters += constructorTypeParametersFromConstructedClass(ownerTypeParameters, isInnerConstructor)
                 extractValueParametersTo(this)
                 val (body, _) = buildFirBody()
                 this.body = body
