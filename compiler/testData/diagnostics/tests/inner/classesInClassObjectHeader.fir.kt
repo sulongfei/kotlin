@@ -1,6 +1,6 @@
 class Test {
     @`InnerAnnotation` @InnerAnnotation
-    companion object : StaticClass(), InnerClass() {
+    companion object : StaticClass(), <!INAPPLICABLE_CANDIDATE!>InnerClass<!>() {
 
     }
 
