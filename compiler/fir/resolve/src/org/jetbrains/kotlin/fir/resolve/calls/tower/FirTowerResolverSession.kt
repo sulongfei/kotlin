@@ -505,6 +505,10 @@ class FirTowerResolverSession internal constructor(
             scope.toScopeTowerLevel(),
             info, TowerGroup.Member, explicitReceiverKind = ExplicitReceiverKind.DISPATCH_RECEIVER
         )
+        processLevel(
+            scope.toScopeTowerLevel(extensionReceiver = ExpressionReceiverValue(info.explicitReceiver!!)),
+            info, TowerGroup.Member.Member, explicitReceiverKind = ExplicitReceiverKind.BOTH_RECEIVERS
+        )
     }
 
     private suspend fun runResolverForInvoke(
