@@ -23,7 +23,7 @@ FILE: exposedSupertype.kt
 
         }
 
-        public final inner class BInner : R|kotlin/Any| {
+        public open inner class BInner : R|kotlin/Any| {
             public constructor(): R|B.BInner| {
                 super<R|kotlin/Any|>()
             }
@@ -64,7 +64,7 @@ FILE: exposedSupertype.kt
     }
     public final class Test2 : R|A.APublicI|, R|B.BInner| {
         public constructor(): R|Test2| {
-            super<R|B.BInner|>()
+            this@R|/Test2|.super<R|B.BInner|>()
         }
 
     }
@@ -82,7 +82,7 @@ FILE: exposedSupertype.kt
     }
     public final class Test5 : R|C.CPublicI|, R|B.BInner| {
         public constructor(): R|Test5| {
-            super<R|B.BInner|>()
+            this@R|/Test5|.super<R|B.BInner|>()
         }
 
     }

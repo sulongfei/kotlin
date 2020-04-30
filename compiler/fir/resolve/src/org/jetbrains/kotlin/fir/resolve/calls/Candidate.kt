@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.fir.resolve.ImplicitReceiverStack
 import org.jetbrains.kotlin.fir.resolve.inference.PostponedResolvedAtom
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.symbols.AbstractFirBasedSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeTypeVariable
 import org.jetbrains.kotlin.fir.types.FirTypeProjection
@@ -118,9 +119,10 @@ class Candidate(
 
     fun dispatchReceiverExpression(): FirExpression = when (explicitReceiverKind) {
         ExplicitReceiverKind.DISPATCH_RECEIVER, ExplicitReceiverKind.BOTH_RECEIVERS ->
-            callInfo.explicitReceiver?.takeIf { it !is FirExpressionStub } ?: FirNoReceiverExpression
-        else -> dispatchReceiverValue?.receiverExpression ?: FirNoReceiverExpression
-    }
+            callInfo.explicitReceiver?.takeIf { it !is FirExpressionStub }
+        else ->
+            dispatchReceiverValue?.receiverExpression
+    }?.takeIf { symbol !is FirConstructorSymbol } ?: FirNoReceiverExpression
 
     fun extensionReceiverExpression(): FirExpression = when (explicitReceiverKind) {
         ExplicitReceiverKind.EXTENSION_RECEIVER, ExplicitReceiverKind.BOTH_RECEIVERS ->

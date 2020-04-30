@@ -23,8 +23,10 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
+import org.jetbrains.kotlin.ir.expressions.IrConstructorCall
 import org.jetbrains.kotlin.ir.expressions.IrErrorCallExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -470,6 +472,14 @@ internal class CallAndReferenceGenerator(
 
     private fun IrExpression.applyReceivers(qualifiedAccess: FirQualifiedAccess, explicitReceiverExpression: IrExpression?): IrExpression {
         return when (this) {
+            is IrConstructorCall -> {
+                val ownerConstructor = symbol.owner as? IrConstructor
+                if (ownerConstructor?.dispatchReceiverParameter != null) {
+                    // NB: we use FIR extension receiver as IR dispatch receiver (special case)
+                    dispatchReceiver = qualifiedAccess.findIrExtensionReceiver(explicitReceiverExpression)
+                }
+                this
+            }
             is IrCallWithIndexedArgumentsBase -> {
                 val ownerFunction = symbol.owner as? IrFunction
                 if (ownerFunction?.dispatchReceiverParameter != null) {
