@@ -513,33 +513,7 @@ private fun KotlinResolutionCandidate.getExpectedTypeWithSAMConversion(
     }
 
     val argumentIsFunctional = when (argument) {
-        is SimpleKotlinCallArgument -> {
-            val stableType = argument.receiver.stableType
-            if (stableType.isFunctionType) {
-                true
-            } else if (stableType.isFunctionTypeOrSubtype) {
-                val builder = csBuilder
-                if (builder.hasContradiction) {
-                    true
-                } else {
-                    var needsConversion = false
-                    builder.runTransaction {
-                        checkSimpleArgument(
-                            builder, argument, argument.getExpectedType(candidateParameter, callComponents.languageVersionSettings),
-                            this@getExpectedTypeWithSAMConversion,
-                            receiverInfo, convertedType = null
-                        )
-                        needsConversion = hasContradiction
-                        false
-                    }
-
-                    needsConversion
-                }
-            } else {
-                false
-            }
-        }
-
+        is SimpleKotlinCallArgument -> argument.receiver.stableType.isFunctionTypeOrSubtype
         is LambdaKotlinCallArgument, is CallableReferenceKotlinCallArgument -> true
 
         else -> false
@@ -554,6 +528,33 @@ private fun KotlinResolutionCandidate.getExpectedTypeWithSAMConversion(
 
     val convertedTypeByOriginal =
         callComponents.samConversionResolver.getFunctionTypeForPossibleSamType(originalExpectedType, samConversionOracle) ?: return null
+
+    if (argument is SimpleKotlinCallArgument) {
+        val stableType = argument.receiver.stableType
+        if (!stableType.isFunctionType && stableType.isFunctionTypeOrSubtype) {
+
+            val builder = csBuilder
+            val conversion = if (builder.hasContradiction) {
+                true
+            } else {
+                var needsConversion = false
+                builder.runTransaction {
+                    checkSimpleArgument(
+                        builder, argument, argument.getExpectedType(candidateParameter, callComponents.languageVersionSettings),
+                        this@getExpectedTypeWithSAMConversion,
+                        receiverInfo, convertedType = null
+                    )
+                    needsConversion = hasContradiction
+                    false
+                }
+
+                needsConversion
+            }
+
+            if (!conversion) return null
+        }
+    }
+
 
     val candidateExpectedType = argument.getExpectedType(candidateParameter, callComponents.languageVersionSettings)
     val convertedTypeByCandidate =
