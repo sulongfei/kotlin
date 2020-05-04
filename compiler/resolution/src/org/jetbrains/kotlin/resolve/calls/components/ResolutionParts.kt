@@ -515,16 +515,17 @@ private fun KotlinResolutionCandidate.getExpectedTypeWithSAMConversion(
     val argumentIsFunctional = when (argument) {
         is SimpleKotlinCallArgument -> {
             val stableType = argument.receiver.stableType
-            if (!stableType.isFunctionType) {
+            if (stableType.isFunctionType) {
                 true
             } else if (stableType.isFunctionTypeOrSubtype) {
-                if (csBuilder.hasContradiction) {
+                val builder = csBuilder
+                if (builder.hasContradiction) {
                     true
                 } else {
                     var needsConversion = false
-                    csBuilder.runTransaction {
+                    builder.runTransaction {
                         checkSimpleArgument(
-                            csBuilder, argument, stableType,
+                            builder, argument, argument.getExpectedType(candidateParameter, callComponents.languageVersionSettings),
                             this@getExpectedTypeWithSAMConversion,
                             receiverInfo, convertedType = null
                         )
