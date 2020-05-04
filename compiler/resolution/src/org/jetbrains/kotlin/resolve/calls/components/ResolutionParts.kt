@@ -421,7 +421,7 @@ private fun KotlinResolutionCandidate.resolveKotlinArgument(
     candidateParameter: ParameterDescriptor?,
     receiverInfo: ReceiverInfo
 ) {
-    val expectedType = candidateParameter?.let { prepareExpectedType(argument, candidateParameter) }
+    val expectedType = candidateParameter?.let { prepareExpectedType(argument, candidateParameter, receiverInfo) }
     val convertedArgument = if (expectedType != null && shouldRunConversionForConstants(expectedType)) {
         val convertedConstant = resolutionCallbacks.convertSignedConstantToUnsigned(argument)
         if (convertedConstant != null) {
@@ -484,10 +484,11 @@ private fun KotlinResolutionCandidate.checkUnsafeImplicitInvokeAfterSafeCall(arg
 
 private fun KotlinResolutionCandidate.prepareExpectedType(
     argument: KotlinCallArgument,
-    candidateParameter: ParameterDescriptor
+    candidateParameter: ParameterDescriptor,
+    receiverInfo: ReceiverInfo
 ): UnwrappedType {
     val argumentType =
-        getExpectedTypeWithSAMConversion(argument, candidateParameter)
+        getExpectedTypeWithSAMConversion(argument, candidateParameter, receiverInfo)
             ?: getExpectedTypeWithSuspendConversion(argument, candidateParameter)
             ?: argument.getExpectedType(candidateParameter, callComponents.languageVersionSettings)
     val resultType = knownTypeParametersResultingSubstitutor?.substitute(argumentType) ?: argumentType
@@ -496,7 +497,8 @@ private fun KotlinResolutionCandidate.prepareExpectedType(
 
 private fun KotlinResolutionCandidate.getExpectedTypeWithSAMConversion(
     argument: KotlinCallArgument,
-    candidateParameter: ParameterDescriptor
+    candidateParameter: ParameterDescriptor,
+    receiverInfo: ReceiverInfo
 ): UnwrappedType? {
     val generatingAdditionalSamCandidateIsEnabled =
         !callComponents.languageVersionSettings.supportsFeature(LanguageFeature.SamConversionPerArgument) &&
@@ -511,8 +513,34 @@ private fun KotlinResolutionCandidate.getExpectedTypeWithSAMConversion(
     }
 
     val argumentIsFunctional = when (argument) {
-        is SimpleKotlinCallArgument -> argument.receiver.stableType.isFunctionTypeOrSubtype
+        is SimpleKotlinCallArgument -> {
+            val stableType = argument.receiver.stableType
+            if (!stableType.isFunctionType) {
+                true
+            } else if (stableType.isFunctionTypeOrSubtype) {
+                if (csBuilder.hasContradiction) {
+                    true
+                } else {
+                    var needsConversion = false
+                    csBuilder.runTransaction {
+                        checkSimpleArgument(
+                            csBuilder, argument, stableType,
+                            this@getExpectedTypeWithSAMConversion,
+                            receiverInfo, convertedType = null
+                        )
+                        needsConversion = hasContradiction
+                        false
+                    }
+
+                    needsConversion
+                }
+            } else {
+                false
+            }
+        }
+
         is LambdaKotlinCallArgument, is CallableReferenceKotlinCallArgument -> true
+
         else -> false
     }
     if (!argumentIsFunctional) return null
