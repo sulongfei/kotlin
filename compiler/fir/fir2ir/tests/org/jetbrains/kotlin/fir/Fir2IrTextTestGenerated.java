@@ -707,6 +707,11 @@ public class Fir2IrTextTestGenerated extends AbstractFir2IrTextTest {
             KotlinTestUtils.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/ir/irText/expressions"), Pattern.compile("^(.+)\\.kt$"), null, true);
         }
 
+        @TestMetadata("also.kt")
+        public void testAlso() throws Exception {
+            runTest("compiler/testData/ir/irText/expressions/also.kt");
+        }
+
         @TestMetadata("argumentMappedWithError.kt")
         public void testArgumentMappedWithError() throws Exception {
             runTest("compiler/testData/ir/irText/expressions/argumentMappedWithError.kt");

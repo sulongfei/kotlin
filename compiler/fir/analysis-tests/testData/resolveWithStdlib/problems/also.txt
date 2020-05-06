@@ -1,0 +1,169 @@
+FILE: also.kt
+    public final suspend fun dummy(): R|kotlin/Unit| {
+        ^dummy R|helpers/TailCallOptimizationChecker|.R|helpers/TailCallOptimizationCheckerClass.saveStackTrace|()
+    }
+    public final suspend fun test(): R|kotlin/Int| {
+        ^test Int(1).R|kotlin/also|<R|kotlin/Int|>(<L> = also@fun <anonymous>(it: R|kotlin/Int|): R|kotlin/Unit| <kind=EXACTLY_ONCE>  {
+            R|/dummy|()
+        }
+        )
+    }
+    public final fun builder(c: R|suspend () -> kotlin/Unit|): R|kotlin/Unit| {
+        R|<local>/c|.R|kotlin/coroutines/startCoroutine|<R|kotlin/Unit|>(Q|helpers/EmptyContinuation|)
+    }
+    public final fun box(): R|kotlin/String| {
+        lvar res: R|kotlin/Int| = Int(0)
+        R|/builder|(<L> = builder@fun <anonymous>(): R|kotlin/Unit| {
+            R|<local>/res| = R|/test|()
+        }
+        )
+        R|helpers/TailCallOptimizationChecker|.R|helpers/TailCallOptimizationCheckerClass.checkStateMachineIn|(String(test))
+        ^box when () {
+            ==(R|<local>/res|, Int(1)) ->  {
+                String(OK)
+            }
+            else ->  {
+                String(FAIL)
+            }
+        }
+
+    }
+FILE: CoroutineUtil.kt
+    public final fun <T> handleResultContinuation(x: R|(T) -> kotlin/Unit|): R|kotlin/coroutines/Continuation<T>| {
+        ^handleResultContinuation object : R|kotlin/coroutines/Continuation<T>| {
+            private constructor(): R|anonymous<T>| {
+                super<R|kotlin/Any|>()
+            }
+
+            public[local] final override val context: R|kotlin/coroutines/EmptyCoroutineContext| = Q|kotlin/coroutines/EmptyCoroutineContext|
+                public get(): R|kotlin/coroutines/EmptyCoroutineContext|
+
+            public[local] final override fun resumeWith(result: R|kotlin/Result<T>|): R|kotlin/Unit| {
+                R|<local>/x|.R|FakeOverride<kotlin/Function1.invoke: R|kotlin/Unit|>|(R|<local>/result|.R|kotlin/getOrThrow|<R|T|>())
+            }
+
+        }
+
+    }
+    public final fun handleExceptionContinuation(x: R|(kotlin/Throwable) -> kotlin/Unit|): R|kotlin/coroutines/Continuation<kotlin/Any?>| {
+        ^handleExceptionContinuation object : R|kotlin/coroutines/Continuation<kotlin/Any?>| {
+            private constructor(): R|anonymous| {
+                super<R|kotlin/Any|>()
+            }
+
+            public[local] final override val context: R|kotlin/coroutines/EmptyCoroutineContext| = Q|kotlin/coroutines/EmptyCoroutineContext|
+                public get(): R|kotlin/coroutines/EmptyCoroutineContext|
+
+            public[local] final override fun resumeWith(result: R|kotlin/Result<kotlin/Any?>|): R|kotlin/Unit| {
+                R|<local>/result|.R|kotlin/Result.exceptionOrNull|()?.R|kotlin/let|<R|kotlin/Throwable|, R|kotlin/Unit|>(R|<local>/x|)
+            }
+
+        }
+
+    }
+    public open class EmptyContinuation : R|kotlin/coroutines/Continuation<kotlin/Any?>| {
+        public constructor(context: R|kotlin/coroutines/CoroutineContext| = Q|kotlin/coroutines/EmptyCoroutineContext|): R|helpers/EmptyContinuation| {
+            super<R|kotlin/Any|>()
+        }
+
+        public open override val context: R|kotlin/coroutines/CoroutineContext| = R|<local>/context|
+            public get(): R|kotlin/coroutines/CoroutineContext|
+
+        public final companion object Companion : R|helpers/EmptyContinuation| {
+            private constructor(): R|helpers/EmptyContinuation.Companion| {
+                super<R|helpers/EmptyContinuation|>()
+            }
+
+        }
+
+        public open override fun resumeWith(result: R|kotlin/Result<kotlin/Any?>|): R|kotlin/Unit| {
+            R|<local>/result|.R|kotlin/getOrThrow|<R|kotlin/Any?|>()
+        }
+
+    }
+    public abstract class ContinuationAdapter<in T> : R|kotlin/coroutines/Continuation<T>| {
+        public constructor<in T>(): R|helpers/ContinuationAdapter<T>| {
+            super<R|kotlin/Any|>()
+        }
+
+        public open override val context: R|kotlin/coroutines/CoroutineContext| = Q|kotlin/coroutines/EmptyCoroutineContext|
+            public get(): R|kotlin/coroutines/CoroutineContext|
+
+        public open override fun resumeWith(result: R|kotlin/Result<T>|): R|kotlin/Unit| {
+            when () {
+                R|<local>/result|.R|kotlin/Result.isSuccess| ->  {
+                    this@R|helpers/ContinuationAdapter|.R|helpers/ContinuationAdapter.resume|(R|<local>/result|.R|kotlin/getOrThrow|<R|T|>())
+                }
+                else ->  {
+                    this@R|helpers/ContinuationAdapter|.R|helpers/ContinuationAdapter.resumeWithException|(R|<local>/result|.R|kotlin/Result.exceptionOrNull|()!!)
+                }
+            }
+
+        }
+
+        public abstract fun resumeWithException(exception: R|kotlin/Throwable|): R|kotlin/Unit|
+
+        public abstract fun resume(value: R|T|): R|kotlin/Unit|
+
+    }
+    public final class TailCallOptimizationCheckerClass : R|kotlin/Any| {
+        public constructor(): R|helpers/TailCallOptimizationCheckerClass| {
+            super<R|kotlin/Any|>()
+        }
+
+        private final val stackTrace: R|kotlin/collections/ArrayList<java/lang/StackTraceElement?>| = R|kotlin/collections/arrayListOf|<R|java/lang/StackTraceElement?|>()
+            private get(): R|kotlin/collections/ArrayList<java/lang/StackTraceElement?>|
+
+        public final suspend fun saveStackTrace(): R|kotlin/Unit| {
+            ^saveStackTrace R|kotlin/coroutines/intrinsics/suspendCoroutineUninterceptedOrReturn|<R|kotlin/Unit|>(<L> = suspendCoroutineUninterceptedOrReturn@fun <anonymous>(it: R|kotlin/coroutines/Continuation<kotlin/Unit>|): R|kotlin/Any?| <kind=UNKNOWN>  {
+                this@R|helpers/TailCallOptimizationCheckerClass|.R|helpers/TailCallOptimizationCheckerClass.saveStackTrace|(R|<local>/it|)
+            }
+            )
+        }
+
+        public final fun saveStackTrace(c: R|kotlin/coroutines/Continuation<*>|): R|kotlin/Unit| {
+            when () {
+                (R|<local>/c| !is R|kotlin/coroutines/jvm/internal/CoroutineStackFrame|) ->  {
+                    R|kotlin/error|(String(Continuation ).R|kotlin/String.plus|(R|<local>/c|).R|kotlin/String.plus|(String( is not subtype of CoroutineStackFrame)))
+                }
+            }
+
+            this@R|helpers/TailCallOptimizationCheckerClass|.R|helpers/TailCallOptimizationCheckerClass.stackTrace|.R|java/util/ArrayList.clear|()
+            lvar csf: R|kotlin/coroutines/jvm/internal/CoroutineStackFrame?| = R|<local>/c|
+            while(!=(this@R|helpers/TailCallOptimizationCheckerClass|.R|<local>/csf|, Null(null))) {
+                this@R|helpers/TailCallOptimizationCheckerClass|.R|helpers/TailCallOptimizationCheckerClass.stackTrace|.R|FakeOverride<java/util/ArrayList.add: R|kotlin/Boolean|>|(this@R|helpers/TailCallOptimizationCheckerClass|.R|<local>/csf|.R|kotlin/coroutines/jvm/internal/CoroutineStackFrame.getStackTraceElement|())
+                this@R|helpers/TailCallOptimizationCheckerClass|.R|<local>/csf| = this@R|helpers/TailCallOptimizationCheckerClass|.R|<local>/csf|.R|kotlin/coroutines/jvm/internal/CoroutineStackFrame.callerFrame|
+            }
+
+        }
+
+        public final fun checkNoStateMachineIn(method: R|kotlin/String|): R|kotlin/Unit| {
+            this@R|helpers/TailCallOptimizationCheckerClass|.R|helpers/TailCallOptimizationCheckerClass.stackTrace|.R|kotlin/collections/find|<R|ft<java/lang/StackTraceElement?, java/lang/StackTraceElement?>?|>(<L> = find@fun <anonymous>(it: R|ft<java/lang/StackTraceElement?, java/lang/StackTraceElement?>?|): R|kotlin/Boolean| <kind=UNKNOWN>  {
+                ^ ==(R|<local>/it|?.R|java/lang/StackTraceElement.methodName|, R|<local>/method|)
+            }
+            )?.R|kotlin/let|<R|java/lang/StackTraceElement|, R|kotlin/Nothing|>(<L> = let@fun <anonymous>(it: R|java/lang/StackTraceElement|): R|kotlin/Nothing| <kind=EXACTLY_ONCE>  {
+                R|kotlin/error|(String(tail-call optimization miss: method at ).R|kotlin/String.plus|(R|<local>/it|).R|kotlin/String.plus|(String( has state-machine )).R|kotlin/String.plus|(this@R|helpers/TailCallOptimizationCheckerClass|.R|helpers/TailCallOptimizationCheckerClass.stackTrace|.R|kotlin/collections/joinToString|<R|ft<java/lang/StackTraceElement?, java/lang/StackTraceElement?>?|>(separator = String(
+))))
+            }
+            )
+        }
+
+        public final fun checkStateMachineIn(method: R|kotlin/String|): R|kotlin/Unit| {
+            when (lval <elvis>: R|ft<java/lang/StackTraceElement?, java/lang/StackTraceElement?>?| = this@R|helpers/TailCallOptimizationCheckerClass|.R|helpers/TailCallOptimizationCheckerClass.stackTrace|.R|kotlin/collections/find|<R|ft<java/lang/StackTraceElement?, java/lang/StackTraceElement?>?|>(<L> = find@fun <anonymous>(it: R|ft<java/lang/StackTraceElement?, java/lang/StackTraceElement?>?|): R|kotlin/Boolean| <kind=UNKNOWN>  {
+                ^ ==(R|<local>/it|?.R|java/lang/StackTraceElement.methodName|, R|<local>/method|)
+            }
+            )) {
+                ==($subj$, Null(null)) ->  {
+                    R|kotlin/error|(String(tail-call optimization hit: method ).R|kotlin/String.plus|(R|<local>/method|).R|kotlin/String.plus|(String( has not state-machine )).R|kotlin/String.plus|(this@R|helpers/TailCallOptimizationCheckerClass|.R|helpers/TailCallOptimizationCheckerClass.stackTrace|.R|kotlin/collections/joinToString|<R|ft<java/lang/StackTraceElement?, java/lang/StackTraceElement?>?|>(separator = String(
+))))
+                }
+                else ->  {
+                    R|<local>/<elvis>|
+                }
+            }
+
+        }
+
+    }
+    public final val TailCallOptimizationChecker: R|helpers/TailCallOptimizationCheckerClass| = R|helpers/TailCallOptimizationCheckerClass.TailCallOptimizationCheckerClass|()
+        public get(): R|helpers/TailCallOptimizationCheckerClass|

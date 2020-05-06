@@ -1,0 +1,47 @@
+FILE fqName:<root> fileName:/also.kt
+  FUN name:dummy visibility:public modality:FINAL <> () returnType:kotlin.Unit [suspend]
+    BLOCK_BODY
+      RETURN type=kotlin.Nothing from='public final fun dummy (): kotlin.Unit [suspend] declared in <root>'
+        CALL 'public final fun saveStackTrace (): kotlin.Unit [suspend] declared in helpers.TailCallOptimizationCheckerClass' type=kotlin.Unit origin=null
+          $this: CALL 'public final fun <get-TailCallOptimizationChecker> (): helpers.TailCallOptimizationCheckerClass declared in helpers' type=helpers.TailCallOptimizationCheckerClass origin=GET_PROPERTY
+  FUN name:test visibility:public modality:FINAL <> () returnType:kotlin.Int [suspend]
+    BLOCK_BODY
+      RETURN type=kotlin.Nothing from='public final fun test (): kotlin.Int [suspend] declared in <root>'
+        CALL 'public final fun also <T> (block: kotlin.Function1<T of kotlin.also, kotlin.Unit>): T of kotlin.also [inline] declared in kotlin' type=kotlin.Int origin=null
+          <T>: kotlin.Int
+          $receiver: CONST Int type=kotlin.Int value=1
+          block: FUN_EXPR type=kotlin.Function1<kotlin.Int, kotlin.Unit> origin=LAMBDA
+            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL <> (it:kotlin.Int) returnType:kotlin.Unit
+              VALUE_PARAMETER name:it index:0 type:kotlin.Int
+              BLOCK_BODY
+                CALL 'public final fun dummy (): kotlin.Unit [suspend] declared in <root>' type=kotlin.Unit origin=null
+  FUN name:builder visibility:public modality:FINAL <> (c:kotlin.coroutines.SuspendFunction0<kotlin.Unit>) returnType:kotlin.Unit
+    VALUE_PARAMETER name:c index:0 type:kotlin.coroutines.SuspendFunction0<kotlin.Unit>
+    BLOCK_BODY
+      CALL 'public final fun startCoroutine <T> (completion: kotlin.coroutines.Continuation<T of kotlin.coroutines.startCoroutine>): kotlin.Unit declared in kotlin.coroutines' type=kotlin.Unit origin=null
+        <T>: kotlin.Unit
+        $receiver: GET_VAR 'c: kotlin.coroutines.SuspendFunction0<kotlin.Unit> declared in <root>.builder' type=kotlin.coroutines.SuspendFunction0<kotlin.Unit> origin=null
+        completion: GET_OBJECT 'CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[helpers.EmptyContinuation]' type=helpers.EmptyContinuation.Companion
+  FUN name:box visibility:public modality:FINAL <> () returnType:kotlin.String
+    BLOCK_BODY
+      VAR name:res type:kotlin.Int [var]
+        CONST Int type=kotlin.Int value=0
+      CALL 'public final fun builder (c: kotlin.coroutines.SuspendFunction0<kotlin.Unit>): kotlin.Unit declared in <root>' type=kotlin.Unit origin=null
+        c: FUN_EXPR type=kotlin.coroutines.SuspendFunction0<kotlin.Unit> origin=LAMBDA
+          FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL <> () returnType:kotlin.Unit [suspend]
+            BLOCK_BODY
+              SET_VAR 'var res: kotlin.Int [var] declared in <root>.box' type=kotlin.Unit origin=EQ
+                CALL 'public final fun test (): kotlin.Int [suspend] declared in <root>' type=kotlin.Int origin=null
+      CALL 'public final fun checkStateMachineIn (method: kotlin.String): kotlin.Unit declared in helpers.TailCallOptimizationCheckerClass' type=kotlin.Unit origin=null
+        $this: CALL 'public final fun <get-TailCallOptimizationChecker> (): helpers.TailCallOptimizationCheckerClass declared in helpers' type=helpers.TailCallOptimizationCheckerClass origin=GET_PROPERTY
+        method: CONST String type=kotlin.String value="test"
+      RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in <root>'
+        WHEN type=kotlin.String origin=IF
+          BRANCH
+            if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+              arg0: GET_VAR 'var res: kotlin.Int [var] declared in <root>.box' type=kotlin.Int origin=null
+              arg1: CONST Int type=kotlin.Int value=1
+            then: CONST String type=kotlin.String value="OK"
+          BRANCH
+            if: CONST Boolean type=kotlin.Boolean value=true
+            then: CONST String type=kotlin.String value="FAIL"

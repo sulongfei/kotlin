@@ -1,0 +1,450 @@
+FILE fqName:helpers fileName:/CoroutineUtil.kt
+  FUN name:handleResultContinuation visibility:public modality:FINAL <T> (x:kotlin.Function1<T of helpers.handleResultContinuation, kotlin.Unit>) returnType:kotlin.coroutines.Continuation<T of helpers.handleResultContinuation>
+    TYPE_PARAMETER name:T index:0 variance: superTypes:[kotlin.Any?]
+    VALUE_PARAMETER name:x index:0 type:kotlin.Function1<T of helpers.handleResultContinuation, kotlin.Unit>
+    BLOCK_BODY
+      RETURN type=kotlin.Nothing from='public final fun handleResultContinuation <T> (x: kotlin.Function1<T of helpers.handleResultContinuation, kotlin.Unit>): kotlin.coroutines.Continuation<T of helpers.handleResultContinuation> declared in helpers'
+        BLOCK type=helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation> origin=OBJECT_LITERAL
+          CLASS CLASS name:<no name provided> modality:FINAL visibility:local superTypes:[kotlin.coroutines.Continuation<T of helpers.handleResultContinuation>]
+            $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation>
+            CONSTRUCTOR visibility:public <> () returnType:helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation> [primary]
+              BLOCK_BODY
+                DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in kotlin.Any'
+                INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:<no name provided> modality:FINAL visibility:local superTypes:[kotlin.coroutines.Continuation<T of helpers.handleResultContinuation>]'
+            PROPERTY name:context visibility:public modality:OPEN [val]
+              FIELD PROPERTY_BACKING_FIELD name:context type:kotlin.coroutines.EmptyCoroutineContext visibility:private [final]
+                EXPRESSION_BODY
+                  GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:EmptyCoroutineContext modality:FINAL visibility:public superTypes:[kotlin.coroutines.CoroutineContext; java.io.Serializable{ <unbound org.jetbrains.kotlin.ir.symbols.impl.IrTypeAliasPublicSymbolImpl@63fec7fd: typealias Serializable> }]' type=kotlin.coroutines.EmptyCoroutineContext
+              FUN DEFAULT_PROPERTY_ACCESSOR name:<get-context> visibility:public modality:OPEN <> ($this:helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation>) returnType:kotlin.coroutines.EmptyCoroutineContext
+                correspondingProperty: PROPERTY name:context visibility:public modality:OPEN [val]
+                overridden:
+                  public abstract fun <get-context> (): kotlin.coroutines.CoroutineContext declared in kotlin.coroutines.Continuation
+                $this: VALUE_PARAMETER name:<this> type:helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation>
+                BLOCK_BODY
+                  RETURN type=kotlin.Nothing from='public open fun <get-context> (): kotlin.coroutines.EmptyCoroutineContext declared in helpers.handleResultContinuation.<no name provided>'
+                    GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:context type:kotlin.coroutines.EmptyCoroutineContext visibility:private [final]' type=kotlin.coroutines.EmptyCoroutineContext origin=null
+                      receiver: GET_VAR '<this>: helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation> declared in helpers.handleResultContinuation.<no name provided>.<get-context>' type=helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation> origin=null
+            FUN name:resumeWith visibility:public modality:OPEN <> ($this:helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation>, result:kotlin.Result<T of helpers.handleResultContinuation>) returnType:kotlin.Unit
+              overridden:
+                public abstract fun resumeWith (result: kotlin.Result<T of kotlin.coroutines.Continuation>): kotlin.Unit declared in kotlin.coroutines.Continuation
+              $this: VALUE_PARAMETER name:<this> type:helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation>
+              VALUE_PARAMETER name:result index:0 type:kotlin.Result<T of helpers.handleResultContinuation>
+              BLOCK_BODY
+                CALL 'public abstract fun invoke (p1: P1 of kotlin.Function1): R of kotlin.Function1 [operator] declared in kotlin.Function1' type=kotlin.Unit origin=INVOKE
+                  $this: GET_VAR 'x: kotlin.Function1<T of helpers.handleResultContinuation, kotlin.Unit> declared in helpers.handleResultContinuation' type=kotlin.Function1<T of helpers.handleResultContinuation, kotlin.Unit> origin=VARIABLE_AS_FUNCTION
+                  p1: CALL 'public final fun getOrThrow <T> (): T of kotlin.getOrThrow [inline] declared in kotlin' type=T of helpers.handleResultContinuation origin=null
+                    <T>: T of helpers.handleResultContinuation
+                    $receiver: GET_VAR 'result: kotlin.Result<T of helpers.handleResultContinuation> declared in helpers.handleResultContinuation.<no name provided>.resumeWith' type=kotlin.Result<T of helpers.handleResultContinuation> origin=null
+            FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
+              overridden:
+                public open fun equals (other: kotlin.Any?): kotlin.Boolean [fake_override,operator] declared in kotlin.coroutines.Continuation
+              $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+              VALUE_PARAMETER name:other index:0 type:kotlin.Any?
+            FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
+              overridden:
+                public open fun hashCode (): kotlin.Int [fake_override] declared in kotlin.coroutines.Continuation
+              $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+            FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
+              overridden:
+                public open fun toString (): kotlin.String [fake_override] declared in kotlin.coroutines.Continuation
+              $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+          CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in helpers.handleResultContinuation.<no name provided>' type=helpers.handleResultContinuation.<no name provided><T of helpers.handleResultContinuation> origin=OBJECT_LITERAL
+  FUN name:handleExceptionContinuation visibility:public modality:FINAL <> (x:kotlin.Function1<kotlin.Throwable, kotlin.Unit>) returnType:kotlin.coroutines.Continuation<kotlin.Any?>
+    VALUE_PARAMETER name:x index:0 type:kotlin.Function1<kotlin.Throwable, kotlin.Unit>
+    BLOCK_BODY
+      RETURN type=kotlin.Nothing from='public final fun handleExceptionContinuation (x: kotlin.Function1<kotlin.Throwable, kotlin.Unit>): kotlin.coroutines.Continuation<kotlin.Any?> declared in helpers'
+        BLOCK type=helpers.handleExceptionContinuation.<no name provided> origin=OBJECT_LITERAL
+          CLASS CLASS name:<no name provided> modality:FINAL visibility:local superTypes:[kotlin.coroutines.Continuation<kotlin.Any?>]
+            $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:helpers.handleExceptionContinuation.<no name provided>
+            CONSTRUCTOR visibility:public <> () returnType:helpers.handleExceptionContinuation.<no name provided> [primary]
+              BLOCK_BODY
+                DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in kotlin.Any'
+                INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:<no name provided> modality:FINAL visibility:local superTypes:[kotlin.coroutines.Continuation<kotlin.Any?>]'
+            PROPERTY name:context visibility:public modality:OPEN [val]
+              FIELD PROPERTY_BACKING_FIELD name:context type:kotlin.coroutines.EmptyCoroutineContext visibility:private [final]
+                EXPRESSION_BODY
+                  GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:EmptyCoroutineContext modality:FINAL visibility:public superTypes:[kotlin.coroutines.CoroutineContext; java.io.Serializable{ <unbound org.jetbrains.kotlin.ir.symbols.impl.IrTypeAliasPublicSymbolImpl@63fec7fd: typealias Serializable> }]' type=kotlin.coroutines.EmptyCoroutineContext
+              FUN DEFAULT_PROPERTY_ACCESSOR name:<get-context> visibility:public modality:OPEN <> ($this:helpers.handleExceptionContinuation.<no name provided>) returnType:kotlin.coroutines.EmptyCoroutineContext
+                correspondingProperty: PROPERTY name:context visibility:public modality:OPEN [val]
+                overridden:
+                  public abstract fun <get-context> (): kotlin.coroutines.CoroutineContext declared in kotlin.coroutines.Continuation
+                $this: VALUE_PARAMETER name:<this> type:helpers.handleExceptionContinuation.<no name provided>
+                BLOCK_BODY
+                  RETURN type=kotlin.Nothing from='public open fun <get-context> (): kotlin.coroutines.EmptyCoroutineContext declared in helpers.handleExceptionContinuation.<no name provided>'
+                    GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:context type:kotlin.coroutines.EmptyCoroutineContext visibility:private [final]' type=kotlin.coroutines.EmptyCoroutineContext origin=null
+                      receiver: GET_VAR '<this>: helpers.handleExceptionContinuation.<no name provided> declared in helpers.handleExceptionContinuation.<no name provided>.<get-context>' type=helpers.handleExceptionContinuation.<no name provided> origin=null
+            FUN name:resumeWith visibility:public modality:OPEN <> ($this:helpers.handleExceptionContinuation.<no name provided>, result:kotlin.Result<kotlin.Any?>) returnType:kotlin.Unit
+              overridden:
+                public abstract fun resumeWith (result: kotlin.Result<T of kotlin.coroutines.Continuation>): kotlin.Unit declared in kotlin.coroutines.Continuation
+              $this: VALUE_PARAMETER name:<this> type:helpers.handleExceptionContinuation.<no name provided>
+              VALUE_PARAMETER name:result index:0 type:kotlin.Result<kotlin.Any?>
+              BLOCK_BODY
+                TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+                  BLOCK type=kotlin.Unit? origin=SAFE_CALL
+                    VAR IR_TEMPORARY_VARIABLE name:tmp_0 type:kotlin.Throwable? [val]
+                      CALL 'public final fun exceptionOrNull (): kotlin.Throwable? declared in kotlin.Result' type=kotlin.Throwable? origin=null
+                        $this: GET_VAR 'result: kotlin.Result<kotlin.Any?> declared in helpers.handleExceptionContinuation.<no name provided>.resumeWith' type=kotlin.Result<kotlin.Any?> origin=null
+                    WHEN type=kotlin.Unit? origin=null
+                      BRANCH
+                        if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                          arg0: GET_VAR 'val tmp_0: kotlin.Throwable? [val] declared in helpers.handleExceptionContinuation.<no name provided>.resumeWith' type=kotlin.Throwable? origin=null
+                          arg1: CONST Null type=kotlin.Nothing? value=null
+                        then: CONST Null type=kotlin.Nothing? value=null
+                      BRANCH
+                        if: CONST Boolean type=kotlin.Boolean value=true
+                        then: CALL 'public final fun let <T, R> (block: kotlin.Function1<T of kotlin.let, R of kotlin.let>): R of kotlin.let [inline] declared in kotlin' type=kotlin.Unit origin=null
+                          <T>: kotlin.Throwable
+                          <R>: kotlin.Unit
+                          $receiver: GET_VAR 'val tmp_0: kotlin.Throwable? [val] declared in helpers.handleExceptionContinuation.<no name provided>.resumeWith' type=kotlin.Throwable? origin=null
+                          block: GET_VAR 'x: kotlin.Function1<kotlin.Throwable, kotlin.Unit> declared in helpers.handleExceptionContinuation' type=kotlin.Function1<kotlin.Throwable, kotlin.Unit> origin=null
+            FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
+              overridden:
+                public open fun equals (other: kotlin.Any?): kotlin.Boolean [fake_override,operator] declared in kotlin.coroutines.Continuation
+              $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+              VALUE_PARAMETER name:other index:0 type:kotlin.Any?
+            FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
+              overridden:
+                public open fun hashCode (): kotlin.Int [fake_override] declared in kotlin.coroutines.Continuation
+              $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+            FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
+              overridden:
+                public open fun toString (): kotlin.String [fake_override] declared in kotlin.coroutines.Continuation
+              $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+          CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in helpers.handleExceptionContinuation.<no name provided>' type=helpers.handleExceptionContinuation.<no name provided> origin=OBJECT_LITERAL
+  CLASS CLASS name:EmptyContinuation modality:OPEN visibility:public superTypes:[kotlin.coroutines.Continuation<kotlin.Any?>]
+    $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:helpers.EmptyContinuation
+    CONSTRUCTOR visibility:public <> (context:kotlin.coroutines.CoroutineContext) returnType:helpers.EmptyContinuation [primary]
+      VALUE_PARAMETER name:context index:0 type:kotlin.coroutines.CoroutineContext
+        EXPRESSION_BODY
+          GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:EmptyCoroutineContext modality:FINAL visibility:public superTypes:[kotlin.coroutines.CoroutineContext; java.io.Serializable{ <unbound org.jetbrains.kotlin.ir.symbols.impl.IrTypeAliasPublicSymbolImpl@63fec7fd: typealias Serializable> }]' type=kotlin.coroutines.EmptyCoroutineContext
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:EmptyContinuation modality:OPEN visibility:public superTypes:[kotlin.coroutines.Continuation<kotlin.Any?>]'
+    PROPERTY name:context visibility:public modality:OPEN [val]
+      FIELD PROPERTY_BACKING_FIELD name:context type:kotlin.coroutines.CoroutineContext visibility:private [final]
+        EXPRESSION_BODY
+          GET_VAR 'context: kotlin.coroutines.CoroutineContext declared in helpers.EmptyContinuation.<init>' type=kotlin.coroutines.CoroutineContext origin=INITIALIZE_PROPERTY_FROM_PARAMETER
+      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-context> visibility:public modality:OPEN <> ($this:helpers.EmptyContinuation) returnType:kotlin.coroutines.CoroutineContext
+        correspondingProperty: PROPERTY name:context visibility:public modality:OPEN [val]
+        overridden:
+          public abstract fun <get-context> (): kotlin.coroutines.CoroutineContext declared in kotlin.coroutines.Continuation
+        $this: VALUE_PARAMETER name:<this> type:helpers.EmptyContinuation
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public open fun <get-context> (): kotlin.coroutines.CoroutineContext declared in helpers.EmptyContinuation'
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:context type:kotlin.coroutines.CoroutineContext visibility:private [final]' type=kotlin.coroutines.CoroutineContext origin=null
+              receiver: GET_VAR '<this>: helpers.EmptyContinuation declared in helpers.EmptyContinuation.<get-context>' type=helpers.EmptyContinuation origin=null
+    CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[helpers.EmptyContinuation]
+      $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:helpers.EmptyContinuation.Companion
+      CONSTRUCTOR visibility:private <> () returnType:helpers.EmptyContinuation.Companion [primary]
+        BLOCK_BODY
+          DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (context: kotlin.coroutines.CoroutineContext) [primary] declared in helpers.EmptyContinuation'
+          INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[helpers.EmptyContinuation]'
+      FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
+        overridden:
+          public open fun equals (other: kotlin.Any?): kotlin.Boolean [fake_override,operator] declared in helpers.EmptyContinuation
+        $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+        VALUE_PARAMETER name:other index:0 type:kotlin.Any?
+      FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
+        overridden:
+          public open fun hashCode (): kotlin.Int [fake_override] declared in helpers.EmptyContinuation
+        $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+      FUN FAKE_OVERRIDE name:resumeWith visibility:public modality:OPEN <> ($this:helpers.EmptyContinuation, result:kotlin.Result<kotlin.Any?>) returnType:kotlin.Unit [fake_override]
+        overridden:
+          public open fun resumeWith (result: kotlin.Result<kotlin.Any?>): kotlin.Unit declared in helpers.EmptyContinuation
+        $this: VALUE_PARAMETER name:<this> type:helpers.EmptyContinuation
+        VALUE_PARAMETER name:result index:0 type:kotlin.Result<kotlin.Any?>
+      FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
+        overridden:
+          public open fun toString (): kotlin.String [fake_override] declared in helpers.EmptyContinuation
+        $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+      PROPERTY FAKE_OVERRIDE name:context visibility:public modality:OPEN [fake_override,val]
+        FUN FAKE_OVERRIDE name:<get-context> visibility:public modality:OPEN <> ($this:helpers.EmptyContinuation) returnType:kotlin.coroutines.CoroutineContext [fake_override]
+          correspondingProperty: PROPERTY FAKE_OVERRIDE name:context visibility:public modality:OPEN [fake_override,val]
+          overridden:
+            public open fun <get-context> (): kotlin.coroutines.CoroutineContext declared in helpers.EmptyContinuation
+          $this: VALUE_PARAMETER name:<this> type:helpers.EmptyContinuation
+    FUN name:resumeWith visibility:public modality:OPEN <> ($this:helpers.EmptyContinuation, result:kotlin.Result<kotlin.Any?>) returnType:kotlin.Unit
+      overridden:
+        public abstract fun resumeWith (result: kotlin.Result<T of kotlin.coroutines.Continuation>): kotlin.Unit declared in kotlin.coroutines.Continuation
+      $this: VALUE_PARAMETER name:<this> type:helpers.EmptyContinuation
+      VALUE_PARAMETER name:result index:0 type:kotlin.Result<kotlin.Any?>
+      BLOCK_BODY
+        TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+          CALL 'public final fun getOrThrow <T> (): T of kotlin.getOrThrow [inline] declared in kotlin' type=kotlin.Any? origin=null
+            <T>: kotlin.Any?
+            $receiver: GET_VAR 'result: kotlin.Result<kotlin.Any?> declared in helpers.EmptyContinuation.resumeWith' type=kotlin.Result<kotlin.Any?> origin=null
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean [fake_override,operator] declared in kotlin.coroutines.Continuation
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+      VALUE_PARAMETER name:other index:0 type:kotlin.Any?
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
+      overridden:
+        public open fun hashCode (): kotlin.Int [fake_override] declared in kotlin.coroutines.Continuation
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
+      overridden:
+        public open fun toString (): kotlin.String [fake_override] declared in kotlin.coroutines.Continuation
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+  CLASS CLASS name:ContinuationAdapter modality:ABSTRACT visibility:public superTypes:[kotlin.coroutines.Continuation<T of helpers.ContinuationAdapter>]
+    $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>
+    TYPE_PARAMETER name:T index:0 variance:in superTypes:[kotlin.Any?]
+    CONSTRUCTOR visibility:public <> () returnType:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter> [primary]
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:ContinuationAdapter modality:ABSTRACT visibility:public superTypes:[kotlin.coroutines.Continuation<T of helpers.ContinuationAdapter>]'
+    PROPERTY name:context visibility:public modality:OPEN [val]
+      FIELD PROPERTY_BACKING_FIELD name:context type:kotlin.coroutines.CoroutineContext visibility:private [final]
+        EXPRESSION_BODY
+          GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:EmptyCoroutineContext modality:FINAL visibility:public superTypes:[kotlin.coroutines.CoroutineContext; java.io.Serializable{ <unbound org.jetbrains.kotlin.ir.symbols.impl.IrTypeAliasPublicSymbolImpl@63fec7fd: typealias Serializable> }]' type=kotlin.coroutines.EmptyCoroutineContext
+      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-context> visibility:public modality:OPEN <> ($this:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>) returnType:kotlin.coroutines.CoroutineContext
+        correspondingProperty: PROPERTY name:context visibility:public modality:OPEN [val]
+        overridden:
+          public abstract fun <get-context> (): kotlin.coroutines.CoroutineContext declared in kotlin.coroutines.Continuation
+        $this: VALUE_PARAMETER name:<this> type:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public open fun <get-context> (): kotlin.coroutines.CoroutineContext declared in helpers.ContinuationAdapter'
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:context type:kotlin.coroutines.CoroutineContext visibility:private [final]' type=kotlin.coroutines.CoroutineContext origin=null
+              receiver: GET_VAR '<this>: helpers.ContinuationAdapter<T of helpers.ContinuationAdapter> declared in helpers.ContinuationAdapter.<get-context>' type=helpers.ContinuationAdapter<T of helpers.ContinuationAdapter> origin=null
+    FUN name:resumeWith visibility:public modality:OPEN <> ($this:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>, result:kotlin.Result<T of helpers.ContinuationAdapter>) returnType:kotlin.Unit
+      overridden:
+        public abstract fun resumeWith (result: kotlin.Result<T of kotlin.coroutines.Continuation>): kotlin.Unit declared in kotlin.coroutines.Continuation
+      $this: VALUE_PARAMETER name:<this> type:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>
+      VALUE_PARAMETER name:result index:0 type:kotlin.Result<T of helpers.ContinuationAdapter>
+      BLOCK_BODY
+        WHEN type=kotlin.Unit origin=IF
+          BRANCH
+            if: CALL 'public final fun <get-isSuccess> (): kotlin.Boolean declared in kotlin.Result' type=kotlin.Boolean origin=GET_PROPERTY
+              $this: GET_VAR 'result: kotlin.Result<T of helpers.ContinuationAdapter> declared in helpers.ContinuationAdapter.resumeWith' type=kotlin.Result<T of helpers.ContinuationAdapter> origin=null
+            then: BLOCK type=kotlin.Unit origin=null
+              CALL 'public abstract fun resume (value: T of helpers.ContinuationAdapter): kotlin.Unit declared in helpers.ContinuationAdapter' type=kotlin.Unit origin=null
+                $this: GET_VAR '<this>: helpers.ContinuationAdapter<T of helpers.ContinuationAdapter> declared in helpers.ContinuationAdapter.resumeWith' type=helpers.ContinuationAdapter<T of helpers.ContinuationAdapter> origin=null
+                value: CALL 'public final fun getOrThrow <T> (): T of kotlin.getOrThrow [inline] declared in kotlin' type=T of helpers.ContinuationAdapter origin=null
+                  <T>: T of helpers.ContinuationAdapter
+                  $receiver: GET_VAR 'result: kotlin.Result<T of helpers.ContinuationAdapter> declared in helpers.ContinuationAdapter.resumeWith' type=kotlin.Result<T of helpers.ContinuationAdapter> origin=null
+          BRANCH
+            if: CONST Boolean type=kotlin.Boolean value=true
+            then: BLOCK type=kotlin.Unit origin=null
+              CALL 'public abstract fun resumeWithException (exception: kotlin.Throwable): kotlin.Unit declared in helpers.ContinuationAdapter' type=kotlin.Unit origin=null
+                $this: GET_VAR '<this>: helpers.ContinuationAdapter<T of helpers.ContinuationAdapter> declared in helpers.ContinuationAdapter.resumeWith' type=helpers.ContinuationAdapter<T of helpers.ContinuationAdapter> origin=null
+                exception: CALL 'public final fun CHECK_NOT_NULL <T0> (arg0: T0 of kotlin.internal.ir.CHECK_NOT_NULL?): T0 of kotlin.internal.ir.CHECK_NOT_NULL declared in kotlin.internal.ir' type=kotlin.Throwable origin=EXCLEXCL
+                  <T0>: kotlin.Throwable
+                  arg0: CALL 'public final fun exceptionOrNull (): kotlin.Throwable? declared in kotlin.Result' type=kotlin.Throwable? origin=null
+                    $this: GET_VAR 'result: kotlin.Result<T of helpers.ContinuationAdapter> declared in helpers.ContinuationAdapter.resumeWith' type=kotlin.Result<T of helpers.ContinuationAdapter> origin=null
+    FUN name:resumeWithException visibility:public modality:ABSTRACT <> ($this:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>, exception:kotlin.Throwable) returnType:kotlin.Unit
+      $this: VALUE_PARAMETER name:<this> type:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>
+      VALUE_PARAMETER name:exception index:0 type:kotlin.Throwable
+    FUN name:resume visibility:public modality:ABSTRACT <> ($this:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>, value:T of helpers.ContinuationAdapter) returnType:kotlin.Unit
+      $this: VALUE_PARAMETER name:<this> type:helpers.ContinuationAdapter<T of helpers.ContinuationAdapter>
+      VALUE_PARAMETER name:value index:0 type:T of helpers.ContinuationAdapter
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean [fake_override,operator] declared in kotlin.coroutines.Continuation
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+      VALUE_PARAMETER name:other index:0 type:kotlin.Any?
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
+      overridden:
+        public open fun hashCode (): kotlin.Int [fake_override] declared in kotlin.coroutines.Continuation
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
+      overridden:
+        public open fun toString (): kotlin.String [fake_override] declared in kotlin.coroutines.Continuation
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+  CLASS CLASS name:TailCallOptimizationCheckerClass modality:FINAL visibility:public superTypes:[kotlin.Any]
+    $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:helpers.TailCallOptimizationCheckerClass
+    CONSTRUCTOR visibility:public <> () returnType:helpers.TailCallOptimizationCheckerClass [primary]
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:TailCallOptimizationCheckerClass modality:FINAL visibility:public superTypes:[kotlin.Any]'
+    PROPERTY name:stackTrace visibility:private modality:FINAL [val]
+      FIELD PROPERTY_BACKING_FIELD name:stackTrace type:java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } visibility:private [final]
+        EXPRESSION_BODY
+          CALL 'public final fun arrayListOf <T> (): java.util.ArrayList<T of kotlin.collections.arrayListOf>{ kotlin.collections.ArrayList<T of kotlin.collections.arrayListOf> } [inline] declared in kotlin.collections' type=java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } origin=null
+            <T>: java.lang.StackTraceElement?
+      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-stackTrace> visibility:private modality:FINAL <> ($this:helpers.TailCallOptimizationCheckerClass) returnType:java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> }
+        correspondingProperty: PROPERTY name:stackTrace visibility:private modality:FINAL [val]
+        $this: VALUE_PARAMETER name:<this> type:helpers.TailCallOptimizationCheckerClass
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='private final fun <get-stackTrace> (): java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } declared in helpers.TailCallOptimizationCheckerClass'
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:stackTrace type:java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } visibility:private [final]' type=java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } origin=null
+              receiver: GET_VAR '<this>: helpers.TailCallOptimizationCheckerClass declared in helpers.TailCallOptimizationCheckerClass.<get-stackTrace>' type=helpers.TailCallOptimizationCheckerClass origin=null
+    FUN name:saveStackTrace visibility:public modality:FINAL <> ($this:helpers.TailCallOptimizationCheckerClass) returnType:kotlin.Unit [suspend]
+      $this: VALUE_PARAMETER name:<this> type:helpers.TailCallOptimizationCheckerClass
+      BLOCK_BODY
+        RETURN type=kotlin.Nothing from='public final fun saveStackTrace (): kotlin.Unit [suspend] declared in helpers.TailCallOptimizationCheckerClass'
+          CALL 'public final fun suspendCoroutineUninterceptedOrReturn <T> (block: kotlin.Function1<kotlin.coroutines.Continuation<T of kotlin.coroutines.intrinsics.suspendCoroutineUninterceptedOrReturn>, kotlin.Any?>): T of kotlin.coroutines.intrinsics.suspendCoroutineUninterceptedOrReturn [inline,suspend] declared in kotlin.coroutines.intrinsics' type=kotlin.Unit origin=null
+            <T>: kotlin.Unit
+            block: FUN_EXPR type=kotlin.Function1<kotlin.coroutines.Continuation<kotlin.Unit>, kotlin.Unit> origin=LAMBDA
+              FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL <> (it:kotlin.coroutines.Continuation<kotlin.Unit>) returnType:kotlin.Unit
+                VALUE_PARAMETER name:it index:0 type:kotlin.coroutines.Continuation<kotlin.Unit>
+                BLOCK_BODY
+                  CALL 'public final fun saveStackTrace (c: kotlin.coroutines.Continuation<*>): kotlin.Unit declared in helpers.TailCallOptimizationCheckerClass' type=kotlin.Unit origin=null
+                    $this: GET_VAR '<this>: helpers.TailCallOptimizationCheckerClass declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=helpers.TailCallOptimizationCheckerClass origin=null
+                    c: GET_VAR 'it: kotlin.coroutines.Continuation<kotlin.Unit> declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace.<anonymous>' type=kotlin.coroutines.Continuation<kotlin.Unit> origin=null
+    FUN name:saveStackTrace visibility:public modality:FINAL <> ($this:helpers.TailCallOptimizationCheckerClass, c:kotlin.coroutines.Continuation<*>) returnType:kotlin.Unit
+      $this: VALUE_PARAMETER name:<this> type:helpers.TailCallOptimizationCheckerClass
+      VALUE_PARAMETER name:c index:0 type:kotlin.coroutines.Continuation<*>
+      BLOCK_BODY
+        WHEN type=kotlin.Unit origin=IF
+          BRANCH
+            if: TYPE_OP type=kotlin.Boolean origin=NOT_INSTANCEOF typeOperand=kotlin.coroutines.jvm.internal.CoroutineStackFrame
+              GET_VAR 'c: kotlin.coroutines.Continuation<*> declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=kotlin.coroutines.Continuation<*> origin=null
+            then: CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing [inline] declared in kotlin' type=kotlin.Nothing origin=null
+              message: CALL 'public final fun plus (other: kotlin.Any?): kotlin.String [operator] declared in kotlin.String' type=kotlin.String origin=PLUS
+                $this: CALL 'public final fun plus (other: kotlin.Any?): kotlin.String [operator] declared in kotlin.String' type=kotlin.String origin=PLUS
+                  $this: CONST String type=kotlin.String value="Continuation "
+                  other: GET_VAR 'c: kotlin.coroutines.Continuation<*> declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=kotlin.coroutines.Continuation<*> origin=null
+                other: CONST String type=kotlin.String value=" is not subtype of CoroutineStackFrame"
+        CALL 'public open fun clear (): kotlin.Unit declared in java.util.ArrayList' type=kotlin.Unit origin=null
+          $this: CALL 'private final fun <get-stackTrace> (): java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } declared in helpers.TailCallOptimizationCheckerClass' type=java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } origin=GET_PROPERTY
+            $this: GET_VAR '<this>: helpers.TailCallOptimizationCheckerClass declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=helpers.TailCallOptimizationCheckerClass origin=null
+        VAR name:csf type:kotlin.coroutines.jvm.internal.CoroutineStackFrame? [var]
+          TYPE_OP type=kotlin.coroutines.jvm.internal.CoroutineStackFrame origin=IMPLICIT_CAST typeOperand=kotlin.coroutines.jvm.internal.CoroutineStackFrame
+            GET_VAR 'c: kotlin.coroutines.Continuation<*> declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=kotlin.coroutines.Continuation<*> origin=null
+        WHILE label=null origin=WHILE_LOOP
+          condition: CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+            $this: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+              arg0: GET_VAR 'var csf: kotlin.coroutines.jvm.internal.CoroutineStackFrame? [var] declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=kotlin.coroutines.jvm.internal.CoroutineStackFrame? origin=null
+              arg1: CONST Null type=kotlin.Nothing? value=null
+          body: BLOCK type=kotlin.Unit origin=null
+            TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+              CALL 'public open fun add (element: E of java.util.ArrayList): kotlin.Boolean declared in java.util.ArrayList' type=kotlin.Boolean origin=null
+                $this: CALL 'private final fun <get-stackTrace> (): java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } declared in helpers.TailCallOptimizationCheckerClass' type=java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } origin=GET_PROPERTY
+                  $this: GET_VAR '<this>: helpers.TailCallOptimizationCheckerClass declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=helpers.TailCallOptimizationCheckerClass origin=null
+                element: CALL 'public abstract fun getStackTraceElement (): java.lang.StackTraceElement? declared in kotlin.coroutines.jvm.internal.CoroutineStackFrame' type=java.lang.StackTraceElement? origin=null
+                  $this: GET_VAR 'var csf: kotlin.coroutines.jvm.internal.CoroutineStackFrame? [var] declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=kotlin.coroutines.jvm.internal.CoroutineStackFrame? origin=null
+            SET_VAR 'var csf: kotlin.coroutines.jvm.internal.CoroutineStackFrame? [var] declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=kotlin.Unit origin=EQ
+              CALL 'public abstract fun <get-callerFrame> (): kotlin.coroutines.jvm.internal.CoroutineStackFrame? declared in kotlin.coroutines.jvm.internal.CoroutineStackFrame' type=kotlin.coroutines.jvm.internal.CoroutineStackFrame? origin=GET_PROPERTY
+                $this: GET_VAR 'var csf: kotlin.coroutines.jvm.internal.CoroutineStackFrame? [var] declared in helpers.TailCallOptimizationCheckerClass.saveStackTrace' type=kotlin.coroutines.jvm.internal.CoroutineStackFrame? origin=null
+    FUN name:checkNoStateMachineIn visibility:public modality:FINAL <> ($this:helpers.TailCallOptimizationCheckerClass, method:kotlin.String) returnType:kotlin.Unit
+      $this: VALUE_PARAMETER name:<this> type:helpers.TailCallOptimizationCheckerClass
+      VALUE_PARAMETER name:method index:0 type:kotlin.String
+      BLOCK_BODY
+        TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+          BLOCK type=kotlin.Nothing? origin=SAFE_CALL
+            VAR IR_TEMPORARY_VARIABLE name:tmp_1 type:java.lang.StackTraceElement? [val]
+              CALL 'public final fun find <T> (predicate: kotlin.Function1<T of kotlin.collections.find, kotlin.Boolean>): T of kotlin.collections.find? [inline] declared in kotlin.collections' type=java.lang.StackTraceElement? origin=null
+                <T>: java.lang.StackTraceElement?
+                $receiver: CALL 'private final fun <get-stackTrace> (): java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } declared in helpers.TailCallOptimizationCheckerClass' type=java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } origin=GET_PROPERTY
+                  $this: GET_VAR '<this>: helpers.TailCallOptimizationCheckerClass declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn' type=helpers.TailCallOptimizationCheckerClass origin=null
+                predicate: FUN_EXPR type=kotlin.Function1<java.lang.StackTraceElement?, kotlin.Boolean> origin=LAMBDA
+                  FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL <> (it:java.lang.StackTraceElement?) returnType:kotlin.Boolean
+                    VALUE_PARAMETER name:it index:0 type:java.lang.StackTraceElement?
+                    BLOCK_BODY
+                      RETURN type=kotlin.Nothing from='local final fun <anonymous> (it: java.lang.StackTraceElement?): kotlin.Boolean declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn'
+                        CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                          arg0: BLOCK type=kotlin.String? origin=SAFE_CALL
+                            VAR IR_TEMPORARY_VARIABLE name:tmp_2 type:java.lang.StackTraceElement? [val]
+                              GET_VAR 'it: java.lang.StackTraceElement? declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn.<anonymous>' type=java.lang.StackTraceElement? origin=null
+                            WHEN type=kotlin.String? origin=null
+                              BRANCH
+                                if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                                  arg0: GET_VAR 'val tmp_2: java.lang.StackTraceElement? [val] declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn.<anonymous>' type=java.lang.StackTraceElement? origin=null
+                                  arg1: CONST Null type=kotlin.Nothing? value=null
+                                then: CONST Null type=kotlin.Nothing? value=null
+                              BRANCH
+                                if: CONST Boolean type=kotlin.Boolean value=true
+                                then: CALL 'public open fun getMethodName (): kotlin.String? declared in java.lang.StackTraceElement' type=kotlin.String? origin=GET_PROPERTY
+                                  $this: GET_VAR 'val tmp_2: java.lang.StackTraceElement? [val] declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn.<anonymous>' type=java.lang.StackTraceElement? origin=null
+                          arg1: GET_VAR 'method: kotlin.String declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn' type=kotlin.String origin=null
+            WHEN type=kotlin.Nothing? origin=null
+              BRANCH
+                if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                  arg0: GET_VAR 'val tmp_1: java.lang.StackTraceElement? [val] declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn' type=java.lang.StackTraceElement? origin=null
+                  arg1: CONST Null type=kotlin.Nothing? value=null
+                then: CONST Null type=kotlin.Nothing? value=null
+              BRANCH
+                if: CONST Boolean type=kotlin.Boolean value=true
+                then: CALL 'public final fun let <T, R> (block: kotlin.Function1<T of kotlin.let, R of kotlin.let>): R of kotlin.let [inline] declared in kotlin' type=kotlin.Nothing origin=null
+                  <T>: java.lang.StackTraceElement
+                  <R>: kotlin.Nothing
+                  $receiver: GET_VAR 'val tmp_1: java.lang.StackTraceElement? [val] declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn' type=java.lang.StackTraceElement? origin=null
+                  block: FUN_EXPR type=kotlin.Function1<java.lang.StackTraceElement, kotlin.Nothing> origin=LAMBDA
+                    FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL <> (it:java.lang.StackTraceElement) returnType:kotlin.Nothing
+                      VALUE_PARAMETER name:it index:0 type:java.lang.StackTraceElement
+                      BLOCK_BODY
+                        CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing [inline] declared in kotlin' type=kotlin.Nothing origin=null
+                          message: CALL 'public final fun plus (other: kotlin.Any?): kotlin.String [operator] declared in kotlin.String' type=kotlin.String origin=PLUS
+                            $this: CALL 'public final fun plus (other: kotlin.Any?): kotlin.String [operator] declared in kotlin.String' type=kotlin.String origin=PLUS
+                              $this: CALL 'public final fun plus (other: kotlin.Any?): kotlin.String [operator] declared in kotlin.String' type=kotlin.String origin=PLUS
+                                $this: CONST String type=kotlin.String value="tail-call optimization miss: method at "
+                                other: GET_VAR 'it: java.lang.StackTraceElement declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn.<anonymous>' type=java.lang.StackTraceElement origin=null
+                              other: CONST String type=kotlin.String value=" has state-machine "
+                            other: CALL 'public final fun joinToString <T> (separator: kotlin.CharSequence, prefix: kotlin.CharSequence, postfix: kotlin.CharSequence, limit: kotlin.Int, truncated: kotlin.CharSequence, transform: kotlin.Function1<T of kotlin.collections.joinToString, kotlin.CharSequence>?): kotlin.String declared in kotlin.collections' type=kotlin.String origin=null
+                              <T>: java.lang.StackTraceElement?
+                              $receiver: CALL 'private final fun <get-stackTrace> (): java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } declared in helpers.TailCallOptimizationCheckerClass' type=java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } origin=GET_PROPERTY
+                                $this: GET_VAR '<this>: helpers.TailCallOptimizationCheckerClass declared in helpers.TailCallOptimizationCheckerClass.checkNoStateMachineIn' type=helpers.TailCallOptimizationCheckerClass origin=null
+                              separator: CONST String type=kotlin.String value="\n"
+    FUN name:checkStateMachineIn visibility:public modality:FINAL <> ($this:helpers.TailCallOptimizationCheckerClass, method:kotlin.String) returnType:kotlin.Unit
+      $this: VALUE_PARAMETER name:<this> type:helpers.TailCallOptimizationCheckerClass
+      VALUE_PARAMETER name:method index:0 type:kotlin.String
+      BLOCK_BODY
+        TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+          BLOCK type=java.lang.StackTraceElement origin=ELVIS
+            VAR IR_TEMPORARY_VARIABLE name:tmp_3 type:java.lang.StackTraceElement? [val]
+              CALL 'public final fun find <T> (predicate: kotlin.Function1<T of kotlin.collections.find, kotlin.Boolean>): T of kotlin.collections.find? [inline] declared in kotlin.collections' type=java.lang.StackTraceElement? origin=null
+                <T>: java.lang.StackTraceElement?
+                $receiver: CALL 'private final fun <get-stackTrace> (): java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } declared in helpers.TailCallOptimizationCheckerClass' type=java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } origin=GET_PROPERTY
+                  $this: GET_VAR '<this>: helpers.TailCallOptimizationCheckerClass declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn' type=helpers.TailCallOptimizationCheckerClass origin=null
+                predicate: FUN_EXPR type=kotlin.Function1<java.lang.StackTraceElement?, kotlin.Boolean> origin=LAMBDA
+                  FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL <> (it:java.lang.StackTraceElement?) returnType:kotlin.Boolean
+                    VALUE_PARAMETER name:it index:0 type:java.lang.StackTraceElement?
+                    BLOCK_BODY
+                      RETURN type=kotlin.Nothing from='local final fun <anonymous> (it: java.lang.StackTraceElement?): kotlin.Boolean declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn'
+                        CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                          arg0: BLOCK type=kotlin.String? origin=SAFE_CALL
+                            VAR IR_TEMPORARY_VARIABLE name:tmp_4 type:java.lang.StackTraceElement? [val]
+                              GET_VAR 'it: java.lang.StackTraceElement? declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn.<anonymous>' type=java.lang.StackTraceElement? origin=null
+                            WHEN type=kotlin.String? origin=null
+                              BRANCH
+                                if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                                  arg0: GET_VAR 'val tmp_4: java.lang.StackTraceElement? [val] declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn.<anonymous>' type=java.lang.StackTraceElement? origin=null
+                                  arg1: CONST Null type=kotlin.Nothing? value=null
+                                then: CONST Null type=kotlin.Nothing? value=null
+                              BRANCH
+                                if: CONST Boolean type=kotlin.Boolean value=true
+                                then: CALL 'public open fun getMethodName (): kotlin.String? declared in java.lang.StackTraceElement' type=kotlin.String? origin=GET_PROPERTY
+                                  $this: GET_VAR 'val tmp_4: java.lang.StackTraceElement? [val] declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn.<anonymous>' type=java.lang.StackTraceElement? origin=null
+                          arg1: GET_VAR 'method: kotlin.String declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn' type=kotlin.String origin=null
+            WHEN type=java.lang.StackTraceElement origin=null
+              BRANCH
+                if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                  arg0: GET_VAR 'val tmp_3: java.lang.StackTraceElement? [val] declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn' type=java.lang.StackTraceElement? origin=null
+                  arg1: CONST Null type=kotlin.Nothing? value=null
+                then: CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing [inline] declared in kotlin' type=kotlin.Nothing origin=null
+                  message: CALL 'public final fun plus (other: kotlin.Any?): kotlin.String [operator] declared in kotlin.String' type=kotlin.String origin=PLUS
+                    $this: CALL 'public final fun plus (other: kotlin.Any?): kotlin.String [operator] declared in kotlin.String' type=kotlin.String origin=PLUS
+                      $this: CALL 'public final fun plus (other: kotlin.Any?): kotlin.String [operator] declared in kotlin.String' type=kotlin.String origin=PLUS
+                        $this: CONST String type=kotlin.String value="tail-call optimization hit: method "
+                        other: GET_VAR 'method: kotlin.String declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn' type=kotlin.String origin=null
+                      other: CONST String type=kotlin.String value=" has not state-machine "
+                    other: CALL 'public final fun joinToString <T> (separator: kotlin.CharSequence, prefix: kotlin.CharSequence, postfix: kotlin.CharSequence, limit: kotlin.Int, truncated: kotlin.CharSequence, transform: kotlin.Function1<T of kotlin.collections.joinToString, kotlin.CharSequence>?): kotlin.String declared in kotlin.collections' type=kotlin.String origin=null
+                      <T>: java.lang.StackTraceElement?
+                      $receiver: CALL 'private final fun <get-stackTrace> (): java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } declared in helpers.TailCallOptimizationCheckerClass' type=java.util.ArrayList<java.lang.StackTraceElement?>{ kotlin.collections.ArrayList<java.lang.StackTraceElement?> } origin=GET_PROPERTY
+                        $this: GET_VAR '<this>: helpers.TailCallOptimizationCheckerClass declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn' type=helpers.TailCallOptimizationCheckerClass origin=null
+                      separator: CONST String type=kotlin.String value="\n"
+              BRANCH
+                if: CONST Boolean type=kotlin.Boolean value=true
+                then: GET_VAR 'val tmp_3: java.lang.StackTraceElement? [val] declared in helpers.TailCallOptimizationCheckerClass.checkStateMachineIn' type=java.lang.StackTraceElement? origin=null
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean [operator] declared in kotlin.Any
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+      VALUE_PARAMETER name:other index:0 type:kotlin.Any?
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
+      overridden:
+        public open fun hashCode (): kotlin.Int declared in kotlin.Any
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
+      overridden:
+        public open fun toString (): kotlin.String declared in kotlin.Any
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+  PROPERTY name:TailCallOptimizationChecker visibility:public modality:FINAL [val]
+    FIELD PROPERTY_BACKING_FIELD name:TailCallOptimizationChecker type:helpers.TailCallOptimizationCheckerClass visibility:private [final,static]
+      EXPRESSION_BODY
+        CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in helpers.TailCallOptimizationCheckerClass' type=helpers.TailCallOptimizationCheckerClass origin=null
+    FUN DEFAULT_PROPERTY_ACCESSOR name:<get-TailCallOptimizationChecker> visibility:public modality:FINAL <> () returnType:helpers.TailCallOptimizationCheckerClass
+      correspondingProperty: PROPERTY name:TailCallOptimizationChecker visibility:public modality:FINAL [val]
+      BLOCK_BODY
+        RETURN type=kotlin.Nothing from='public final fun <get-TailCallOptimizationChecker> (): helpers.TailCallOptimizationCheckerClass declared in helpers'
+          GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:TailCallOptimizationChecker type:helpers.TailCallOptimizationCheckerClass visibility:private [final,static]' type=helpers.TailCallOptimizationCheckerClass origin=null
