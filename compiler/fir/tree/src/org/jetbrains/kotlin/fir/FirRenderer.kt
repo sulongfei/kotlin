@@ -1030,6 +1030,13 @@ class FirRenderer(builder: StringBuilder, private val mode: RenderMode = RenderM
 
     override fun visitExpressionWithSmartcast(expressionWithSmartcast: FirExpressionWithSmartcast) {
         visitQualifiedAccessExpression(expressionWithSmartcast)
+        if (expressionWithSmartcast.originalType.coneTypeSafe<ConeKotlinType>() !=
+            expressionWithSmartcast.typeRef.coneTypeSafe()
+        ) {
+            print(" (as ")
+            expressionWithSmartcast.typeRef.accept(this)
+            print(")")
+        }
     }
 
     private fun visitAssignment(operation: FirOperation, rValue: FirExpression) {
