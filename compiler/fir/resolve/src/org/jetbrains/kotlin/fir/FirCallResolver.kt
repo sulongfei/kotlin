@@ -123,7 +123,7 @@ class FirCallResolver(
             typeArguments,
             session,
             file,
-            transformer.components.implicitReceiverStack,
+            transformer.components.containingDeclarations,
         )
         towerResolver.reset()
         val result = towerResolver.runResolver(
@@ -282,7 +282,7 @@ class FirCallResolver(
             typeArguments = typeArguments,
             session,
             file,
-            implicitReceiverStack,
+            containingDeclarations,
         )
         val candidateFactory = CandidateFactory(this, callInfo)
         val candidates = mutableListOf<Candidate>()
@@ -333,7 +333,7 @@ class FirCallResolver(
             emptyList(),
             session,
             file,
-            transformer.components.implicitReceiverStack,
+            transformer.components.containingDeclarations,
             candidateForCommonInvokeReceiver = null,
             // Additional things for callable reference resolve
             expectedType,
