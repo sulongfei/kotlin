@@ -18,8 +18,8 @@ FILE: varChangingType.kt
             }
 
             lvar ss: R|B?| = R|<local>/s|
-            while(!=(this@R|/Some|.R|<local>/ss|, Null(null))) {
-                this@R|/Some|.R|<local>/ss| = R|<local>/s|.R|/B.next|()
+            while(!=(R|<local>/ss|, Null(null))) {
+                R|<local>/ss| = R|<local>/s|.R|/B.next|()
             }
 
         }
