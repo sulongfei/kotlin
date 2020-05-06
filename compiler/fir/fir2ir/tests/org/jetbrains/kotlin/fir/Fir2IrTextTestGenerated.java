@@ -1332,6 +1332,11 @@ public class Fir2IrTextTestGenerated extends AbstractFir2IrTextTest {
             runTest("compiler/testData/ir/irText/expressions/values.kt");
         }
 
+        @TestMetadata("varChangingType.kt")
+        public void testVarChangingType() throws Exception {
+            runTest("compiler/testData/ir/irText/expressions/varChangingType.kt");
+        }
+
         @TestMetadata("vararg.kt")
         public void testVararg() throws Exception {
             runTest("compiler/testData/ir/irText/expressions/vararg.kt");

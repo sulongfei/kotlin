@@ -1668,6 +1668,11 @@ public class FirDiagnosticsTestGenerated extends AbstractFirDiagnosticsTest {
         public void testSafeCallInvoke() throws Exception {
             runTest("compiler/fir/analysis-tests/testData/resolve/problems/safeCallInvoke.kt");
         }
+
+        @TestMetadata("varChangingType.kt")
+        public void testVarChangingType() throws Exception {
+            runTest("compiler/fir/analysis-tests/testData/resolve/problems/varChangingType.kt");
+        }
     }
 
     @TestMetadata("compiler/fir/analysis-tests/testData/resolve/properties")

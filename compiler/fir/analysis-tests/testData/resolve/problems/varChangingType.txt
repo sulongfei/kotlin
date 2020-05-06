@@ -1,0 +1,27 @@
+FILE: varChangingType.kt
+    public abstract interface A : R|kotlin/Any| {
+    }
+    public abstract interface B : R|kotlin/Any| {
+        public abstract fun next(): R|B?|
+
+    }
+    public final class Some : R|kotlin/Any| {
+        public constructor(): R|Some| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final fun foo(s: R|A|): R|kotlin/Unit| {
+            when () {
+                (R|<local>/s| !is R|B|) ->  {
+                    ^foo Unit
+                }
+            }
+
+            lvar ss: R|B?| = R|<local>/s|
+            while(!=(this@R|/Some|.R|<local>/ss|, Null(null))) {
+                this@R|/Some|.R|<local>/ss| = R|<local>/s|.R|/B.next|()
+            }
+
+        }
+
+    }

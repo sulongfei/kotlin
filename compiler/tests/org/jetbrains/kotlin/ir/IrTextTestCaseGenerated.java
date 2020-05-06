@@ -1331,6 +1331,11 @@ public class IrTextTestCaseGenerated extends AbstractIrTextTestCase {
             runTest("compiler/testData/ir/irText/expressions/values.kt");
         }
 
+        @TestMetadata("varChangingType.kt")
+        public void testVarChangingType() throws Exception {
+            runTest("compiler/testData/ir/irText/expressions/varChangingType.kt");
+        }
+
         @TestMetadata("vararg.kt")
         public void testVararg() throws Exception {
             runTest("compiler/testData/ir/irText/expressions/vararg.kt");
