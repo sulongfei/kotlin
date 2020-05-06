@@ -17,9 +17,9 @@ FILE: varChangingType.kt
                 }
             }
 
-            lvar ss: R|B?| = R|<local>/s|
-            while(!=(R|<local>/ss|, Null(null))) {
-                R|<local>/ss| = R|<local>/s|.R|/B.next|()
+            lvar ss: R|B?| = R|<local>/s| (as R|it(B & A)|)
+            while(!=(R|<local>/ss| (as R|it(A & B)|), Null(null))) {
+                R|<local>/ss| = R|<local>/s| (as R|it(B & A)|).R|/B.next|()
             }
 
         }
