@@ -265,7 +265,14 @@ internal class ClassMemberGenerator(
                 )
             }.let {
                 if (firDispatchReceiver !is FirNoReceiverExpression) {
-                    it.dispatchReceiver = visitor.convertToIrExpression(firDispatchReceiver)
+                    // NB: this case is a bit specific, we replace here outer this receiver from FE
+                    // to inner this receiver in BE
+                    val dispatchReceiverParameter = conversionScope.lastDispatchReceiverParameter()
+                    if (dispatchReceiverParameter != null) {
+                        it.dispatchReceiver = IrGetValueImpl(
+                            startOffset, endOffset, dispatchReceiverParameter.type, dispatchReceiverParameter.symbol
+                        )
+                    }
                 }
                 with(callGenerator) {
                     it.applyCallArguments(this@toIrDelegatingConstructorCall)
