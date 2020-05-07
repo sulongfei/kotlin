@@ -639,7 +639,7 @@ class Fir2IrDeclarationStorage(
             ) { symbol ->
                 IrPropertyImpl(
                     startOffset, endOffset, origin, symbol,
-                    property.name, property.visibility, property.modality!!,
+                    property.name, property.visibility, property.modality ?: Modality.FINAL,
                     isVar = property.isVar,
                     isConst = property.isConst,
                     isLateinit = property.isLateInit,
