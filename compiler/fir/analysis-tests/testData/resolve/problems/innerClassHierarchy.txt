@@ -56,28 +56,28 @@ FILE: innerClassHierarchy.kt
 
         public open inner class C : R|A.B| {
             public constructor(s: R|kotlin/String|, additional: R|kotlin/Double|): R|A.C| {
-                this@R|/A.C|.super<R|A.B|>(R|<local>/s|)
+                this@R|/A|.super<R|A.B|>(R|<local>/s|)
             }
 
         }
 
         public open inner class D : R|A.C| {
             public constructor(other: R|kotlin/Int|, another: R|kotlin/Long|, s: R|kotlin/String|): R|A.D| {
-                this@R|/A.D|.super<R|A.C|>(R|<local>/s|, R|<local>/another|.R|kotlin/Long.toDouble|())
+                this@R|/A|.super<R|A.C|>(R|<local>/s|, R|<local>/another|.R|kotlin/Long.toDouble|())
             }
 
         }
 
         public open inner class E : R|A.D| {
             public constructor(): R|A.E| {
-                this@R|/A.E|.super<R|A.D|>(Int(0), Long(42), String(OK))
+                this@R|/A|.super<R|A.D|>(Int(0), Long(42), String(OK))
             }
 
         }
 
         public final inner class F : R|A.E| {
             public constructor(): R|A.F| {
-                this@R|/A.F|.super<R|A.E|>()
+                this@R|/A|.super<R|A.E|>()
             }
 
         }

@@ -199,7 +199,7 @@ class FirTowerResolverSession internal constructor(
         if (constructorClassSymbol is FirRegularClassSymbol && constructorClassSymbol.fir.isInner) {
             // Search for inner constructors only
             // 1 because we search for inner constructor in outer class
-            for (lexical in nonLocalLexical) {
+            for (lexical in nonLocalLexical.drop(1)) {
                 lexical.implicitReceiver?.let { implicitReceiverValue ->
                     processLevel(
                         implicitReceiverValue.toMemberScopeTowerLevel(),
