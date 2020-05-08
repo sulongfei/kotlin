@@ -283,7 +283,6 @@ class FirCallResolver(
         )
         towerResolver.reset()
         val result = towerResolver.runResolverForDelegatingConstructor(
-            implicitReceiverStack.receiversAsReversed(),
             callInfo,
             constructorClassSymbol,
         )

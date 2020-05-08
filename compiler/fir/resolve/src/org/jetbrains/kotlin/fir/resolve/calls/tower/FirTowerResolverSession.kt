@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.fir.resolve.calls.tower
 
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.declarations.isInner
 import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccessExpression
 import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
@@ -20,8 +21,6 @@ import org.jetbrains.kotlin.fir.resolve.transformers.body.resolve.firUnsafe
 import org.jetbrains.kotlin.fir.scopes.FirScope
 import org.jetbrains.kotlin.fir.scopes.ProcessorAction
 import org.jetbrains.kotlin.fir.scopes.impl.FirCompositeScope
-import org.jetbrains.kotlin.fir.scopes.impl.FirLocalScope
-import org.jetbrains.kotlin.fir.scopes.impl.FirStaticScope
 import org.jetbrains.kotlin.fir.scopes.unsubstitutedScope
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
@@ -200,11 +199,13 @@ class FirTowerResolverSession internal constructor(
         if (constructorClassSymbol is FirRegularClassSymbol && constructorClassSymbol.fir.isInner) {
             // Search for inner constructors only
             // 1 because we search for inner constructor in outer class
-            implicitReceiversUsableAsValues.getOrNull(1)?.let { (implicitReceiverValue) ->
-                processLevel(
-                    implicitReceiverValue.toMemberScopeTowerLevel(),
-                    info.copy(name = constructorClassSymbol.fir.name), TowerGroup.Member
-                )
+            for (lexical in nonLocalLexical) {
+                lexical.implicitReceiver?.let { implicitReceiverValue ->
+                    processLevel(
+                        implicitReceiverValue.toMemberScopeTowerLevel(),
+                        info.copy(name = constructorClassSymbol.fir.name), TowerGroup.Member
+                    )
+                }
             }
         } else {
             // Search for non-inner constructors only
