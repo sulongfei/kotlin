@@ -189,7 +189,10 @@ class MemberScopeTowerLevel(
 // We can access here members of currently accessible scope which is not influenced by explicit receiver
 // We can either have no explicit receiver at all, or it can be an extension receiver
 // An explicit receiver never can be a dispatch receiver at this level
-// So: dispatch receiver = strictly none (EXCEPTIONS: importing scopes with import from objects, synthetic field variable)
+// So: dispatch receiver = none with the following exceptions:
+// - importing scopes with import from objects
+// - synthetic 'field' variable
+// - inner class constructors
 // So: extension receiver = either none or explicit
 // (if explicit receiver exists, it always *should* be an extension receiver)
 class ScopeTowerLevel(
@@ -227,7 +230,12 @@ class ScopeTowerLevel(
             }
         }
         return when {
-            candidate !is FirBackingFieldSymbol -> null
+            candidate is FirConstructorSymbol && candidate.fir.isInner -> {
+                bodyResolveComponents.implicitReceiverStack.receiversAsReversed().getOrNull(1)
+            }
+            candidate !is FirBackingFieldSymbol -> {
+                null
+            }
             candidate.callableId.classId != null -> {
                 bodyResolveComponents.implicitReceiverStack.lastDispatchReceiver { implicitReceiverValue ->
                     implicitReceiverValue.type.classId == holderId
