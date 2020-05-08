@@ -35,10 +35,10 @@ class E: A() {
 
     object Z {
         init {
-            B().foo()
-            B().<!UNRESOLVED_REFERENCE!>bar<!>()
+            <!UNRESOLVED_REFERENCE!>B<!>().<!UNRESOLVED_REFERENCE!>foo<!>()
+            <!UNRESOLVED_REFERENCE!>B<!>().<!UNRESOLVED_REFERENCE!>bar<!>()
 
-            D()
+            <!UNRESOLVED_REFERENCE!>D<!>()
             <!UNRESOLVED_REFERENCE!>C<!>()
         }
     }
@@ -60,7 +60,7 @@ class F: A() {
     companion object {
         init {
             B().fas()
-            D().f()
+            <!UNRESOLVED_REFERENCE!>D<!>().<!UNRESOLVED_REFERENCE!>f<!>()
         }
     }
 }
