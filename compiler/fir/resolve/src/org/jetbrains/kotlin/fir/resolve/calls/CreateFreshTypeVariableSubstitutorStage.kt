@@ -5,14 +5,13 @@
 
 package org.jetbrains.kotlin.fir.resolve.calls
 
-import org.jetbrains.kotlin.fir.declarations.FirTypeParameterRefsOwner
-import org.jetbrains.kotlin.fir.declarations.FirTypeParameter
 import org.jetbrains.kotlin.fir.declarations.FirTypeParameterRef
-import org.jetbrains.kotlin.fir.declarations.FirTypeParametersOwner
+import org.jetbrains.kotlin.fir.declarations.FirTypeParameterRefsOwner
 import org.jetbrains.kotlin.fir.renderWithType
 import org.jetbrains.kotlin.fir.resolve.inference.TypeParameterBasedTypeVariable
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.resolve.substitution.substitutorByMap
+import org.jetbrains.kotlin.fir.symbols.StandardClassIds
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.impl.FirTypePlaceholderProjection
@@ -130,7 +129,12 @@ fun createToFreshVariableSubstitutorAndAddInitialConstraints(
         upperBound: ConeKotlinType//,
         //position: DeclaredUpperBoundConstraintPosition
     ) {
-        csBuilder.addSubtypeConstraint(defaultType, toFreshVariables.substituteOrSelf(upperBound), FirDeclaredUpperBoundConstraintPosition())
+        if (upperBound.nullability.isNullable && (upperBound as? ConeClassLikeType)?.lookupTag?.classId == StandardClassIds.Any) return
+        csBuilder.addSubtypeConstraint(
+            defaultType,
+            toFreshVariables.substituteOrSelf(upperBound),
+            FirDeclaredUpperBoundConstraintPosition()
+        )
     }
 
     for (index in typeParameters.indices) {
