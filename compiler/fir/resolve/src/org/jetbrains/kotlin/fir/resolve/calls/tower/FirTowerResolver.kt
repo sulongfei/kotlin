@@ -22,7 +22,7 @@ class FirTowerResolver(
     ): CandidateCollector {
         val candidateFactoriesAndCollectors = buildCandidateFactoriesAndCollectors(info, collector)
 
-        val towerResolverSession = FirTowerResolverSession(components, manager, candidateFactoriesAndCollectors)
+        val towerResolverSession = FirTowerResolverSession(components, manager, candidateFactoriesAndCollectors, info)
         towerResolverSession.runResolution(info)
 
         manager.runTasks()
