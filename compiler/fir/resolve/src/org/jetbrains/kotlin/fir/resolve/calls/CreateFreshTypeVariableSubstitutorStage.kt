@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.fir.resolve.calls
 
+import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirTypeParameterRef
 import org.jetbrains.kotlin.fir.declarations.FirTypeParameterRefsOwner
 import org.jetbrains.kotlin.fir.renderWithType
@@ -13,6 +14,7 @@ import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.resolve.substitution.substitutorByMap
 import org.jetbrains.kotlin.fir.symbols.StandardClassIds
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
+import org.jetbrains.kotlin.fir.typeContext
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.impl.FirTypePlaceholderProjection
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemOperation
@@ -29,7 +31,8 @@ internal object CreateFreshTypeVariableSubstitutorStage : ResolutionStage() {
             return
         }
         val csBuilder = candidate.system.getBuilder()
-        val (substitutor, freshVariables) = createToFreshVariableSubstitutorAndAddInitialConstraints(declaration, candidate, csBuilder)
+        val (substitutor, freshVariables) =
+            createToFreshVariableSubstitutorAndAddInitialConstraints(declaration, candidate, csBuilder, callInfo.session)
         candidate.substitutor = substitutor
         candidate.freshVariables = freshVariables
 
@@ -112,7 +115,8 @@ internal object CreateFreshTypeVariableSubstitutorStage : ResolutionStage() {
 fun createToFreshVariableSubstitutorAndAddInitialConstraints(
     declaration: FirTypeParameterRefsOwner,
     candidate: Candidate,
-    csBuilder: ConstraintSystemOperation
+    csBuilder: ConstraintSystemOperation,
+    session: FirSession
 ): Pair<ConeSubstitutor, List<ConeTypeVariable>> {
 
     val typeParameters = declaration.typeParameters
@@ -129,7 +133,12 @@ fun createToFreshVariableSubstitutorAndAddInitialConstraints(
         upperBound: ConeKotlinType//,
         //position: DeclaredUpperBoundConstraintPosition
     ) {
-        if (upperBound.nullability.isNullable && (upperBound as? ConeClassLikeType)?.lookupTag?.classId == StandardClassIds.Any) return
+        if ((upperBound.lowerBoundIfFlexible() as? ConeClassLikeType)?.lookupTag?.classId == StandardClassIds.Any &&
+            session.typeContext.run { upperBound.isNullableType() }
+        ) {
+            return
+        }
+
         csBuilder.addSubtypeConstraint(
             defaultType,
             toFreshVariables.substituteOrSelf(upperBound),
