@@ -33,7 +33,7 @@ val commonMainSources by task<Sync> {
                 "libraries/stdlib/common/src/kotlin/TextH.kt",
                 "libraries/stdlib/common/src/kotlin/UMath.kt",
                 "libraries/stdlib/common/src/kotlin/collections/**",
-                "libraries/stdlib/common/src/kotlin/ioH.kt",
+//                "libraries/stdlib/common/src/kotlin/ioH.kt",
                 "libraries/stdlib/src/kotlin/collections/**",
                 "libraries/stdlib/src/kotlin/experimental/bitwiseOperations.kt",
                 "libraries/stdlib/src/kotlin/properties/Delegates.kt",
@@ -46,6 +46,7 @@ val commonMainSources by task<Sync> {
         )
         fullCommonMainSources.outputs.files.singleFile
     }
+    from("$rootDir/libraries/stdlib/js-ir-minimal-for-test/src")
 
     into("$buildDir/commonMainSources")
 }
@@ -87,17 +88,16 @@ val jsMainSources by task<Sync> {
         fullJsMainSources.outputs.files.singleFile
     }
 
-    from("$rootDir/libraries/stdlib/js-ir-minimal-for-test/src")
     into("$buildDir/jsMainSources")
 }
 
 kotlin {
     sourceSets {
         val commonMain by getting {
-            kotlin.srcDir(commonMainSources.get().destinationDir)
+            kotlin.srcDir(files(commonMainSources.map { it.destinationDir }))
         }
         val jsMain by getting {
-           kotlin.srcDir(jsMainSources.get().destinationDir)
+            kotlin.srcDir(files(jsMainSources.map { it.destinationDir }))
         }
     }
 }
@@ -118,6 +118,4 @@ tasks.withType<KotlinCompile<*>>().configureEach {
 
 tasks.named("compileKotlinJs") {
     (this as KotlinCompile<*>).kotlinOptions.freeCompilerArgs += "-Xir-module-name=kotlin"
-    dependsOn(commonMainSources)
-    dependsOn(jsMainSources)
 }
