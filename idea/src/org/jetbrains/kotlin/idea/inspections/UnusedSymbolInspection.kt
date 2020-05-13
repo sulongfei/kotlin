@@ -65,6 +65,7 @@ import org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinReferencesSearchPar
 import org.jetbrains.kotlin.idea.search.isCheapEnoughToSearchWithScripts
 import org.jetbrains.kotlin.idea.search.projectScope
 import org.jetbrains.kotlin.idea.search.usagesSearch.dataClassComponentFunction
+import org.jetbrains.kotlin.idea.search.usagesSearch.getAccessorNames
 import org.jetbrains.kotlin.idea.search.usagesSearch.getClassNameForCompanionObject
 import org.jetbrains.kotlin.idea.stubindex.KotlinSourceFilterScope
 import org.jetbrains.kotlin.idea.util.ProjectRootsUtil
@@ -154,7 +155,7 @@ class UnusedSymbolInspection : AbstractKotlinInspection() {
                 }
                 val alternateNames = sequence {
                     yield(declaration.getClassNameForCompanionObject())
-//                    yieldAll(declaration.getAccessorNames()) // Skip accessorNames because it's expensive to get, better to postpone it
+                    yieldAll(declaration.getAccessorNames()) // Skip accessorNames because it's expensive to get, better to postpone it
                 }
 
                 val mainDeclarationSearchResult = isCheapEnoughToSearchWithScripts(declarationName, useScope, project)
@@ -180,11 +181,10 @@ class UnusedSymbolInspection : AbstractKotlinInspection() {
         }
 
         private fun searchInAlternateNames(project: Project, alternateNames: Sequence<String?>, scope: GlobalSearchScope): SearchCostResult {
-            val psiSearchHelper = PsiSearchHelper.getInstance(project)
             for (name in alternateNames.filterNotNull()) {
-                val cheapEnoughToSearch = psiSearchHelper.isCheapEnoughToSearch(name, scope, null, null)
-                if (cheapEnoughToSearch != ZERO_OCCURRENCES)
-                    return cheapEnoughToSearch
+                val cheapEnoughToSearch = isCheapEnoughToSearchWithScripts(name, scope, project)
+                if (cheapEnoughToSearch.first != ZERO_OCCURRENCES)
+                    return cheapEnoughToSearch.first
             }
             return ZERO_OCCURRENCES
         }
@@ -608,6 +608,6 @@ private fun safeDelete(project: Project, declaration: PsiElement) {
 
 class SearchCostNamedDeclaration(val declaration: KtNamedDeclaration) : KtNamedDeclaration by declaration {
     val searchCostResult: SearchCostResult by lazy {
-        UnusedSymbolInspection.isCheapEnoughToSearchUsages(this)
+        UnusedSymbolInspection.isCheapEnoughToSearchUsages(declaration)
     }
 }
