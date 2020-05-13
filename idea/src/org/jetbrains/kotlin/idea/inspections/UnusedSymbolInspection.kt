@@ -16,12 +16,15 @@ import com.intellij.codeInspection.ex.EntryPointsManagerBase
 import com.intellij.codeInspection.ex.EntryPointsManagerImpl
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiReference
+import com.intellij.openapi.util.Comparing
+import com.intellij.openapi.util.registry.Registry
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.*
+import com.intellij.psi.impl.search.PsiSearchHelperImpl
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.PsiSearchHelper
 import com.intellij.psi.search.PsiSearchHelper.SearchCostResult
@@ -57,12 +60,11 @@ import org.jetbrains.kotlin.idea.project.languageVersionSettings
 import org.jetbrains.kotlin.idea.quickfix.RemoveUnusedFunctionParameterFix
 import org.jetbrains.kotlin.idea.references.mainReference
 import org.jetbrains.kotlin.idea.references.resolveMainReferenceToDescriptors
-import org.jetbrains.kotlin.idea.search.findScriptsWithUsages
 import org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinReferencesSearchOptions
 import org.jetbrains.kotlin.idea.search.ideaExtensions.KotlinReferencesSearchParameters
+import org.jetbrains.kotlin.idea.search.isCheapEnoughToSearchWithScripts
 import org.jetbrains.kotlin.idea.search.projectScope
 import org.jetbrains.kotlin.idea.search.usagesSearch.dataClassComponentFunction
-import org.jetbrains.kotlin.idea.search.usagesSearch.getAccessorNames
 import org.jetbrains.kotlin.idea.search.usagesSearch.getClassNameForCompanionObject
 import org.jetbrains.kotlin.idea.stubindex.KotlinSourceFilterScope
 import org.jetbrains.kotlin.idea.util.ProjectRootsUtil
@@ -79,12 +81,15 @@ import org.jetbrains.kotlin.resolve.bindingContextUtil.isUsedAsExpression
 import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
 import org.jetbrains.kotlin.resolve.isInlineClassType
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
+import org.jetbrains.kotlin.scripting.definitions.findScriptDefinition
 import org.jetbrains.kotlin.types.expressions.OperatorConventions
 import org.jetbrains.kotlin.util.findCallableMemberBySignature
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
 import javax.swing.JComponent
 import javax.swing.JPanel
 
@@ -142,43 +147,46 @@ class UnusedSymbolInspection : AbstractKotlinInspection() {
 
             val useScope = psiSearchHelper.getUseScope(declaration)
             if (useScope is GlobalSearchScope) {
-                var zeroOccurrences = true
-
-                val declarationName = declaration.name
+                val declarationName = declaration.name.takeIf { it?.isNotBlank() ?: false }
                 declarationName?.let {
                     if (OperatorConventions.isConventionName(Name.identifier(declarationName)))
                         return TOO_MANY_OCCURRENCES
                 }
-
-                val usedScripts = findScriptsWithUsages(declaration, useScope)
-                if (usedScripts.isNotEmpty()) {
-                    if (!ScriptConfigurationManager.getInstance(declaration.project).updater.ensureConfigurationUpToDate(usedScripts)) {
-                        return TOO_MANY_OCCURRENCES
-                    }
-                }
-
                 val alternateNames = sequence {
-                    yield(declarationName)
                     yield(declaration.getClassNameForCompanionObject())
-                    yieldAll(declaration.getAccessorNames())
-                }
-                for (name in alternateNames) {
-                    if (name == null) continue
-                    if (OperatorConventions.isConventionName(Name.identifier(name))) {
-                        return TOO_MANY_OCCURRENCES
-                    }
-                    val cheapEnoughToSearch = psiSearchHelper.isCheapEnoughToSearch(name, useScope, null, null)
-                    when (cheapEnoughToSearch) {
-                        ZERO_OCCURRENCES -> {
-                        } // go on, check other names
-                        FEW_OCCURRENCES -> return FEW_OCCURRENCES
-                        TOO_MANY_OCCURRENCES -> return TOO_MANY_OCCURRENCES // searching usages is too expensive; behave like it is used
-                    }
+//                    yieldAll(declaration.getAccessorNames()) // Skip accessorNames because it's expensive to get, better to postpone it
                 }
 
-                if (zeroOccurrences) return ZERO_OCCURRENCES
+                val mainDeclarationSearchResult = isCheapEnoughToSearchWithScripts(declarationName, useScope, project)
+                return when (mainDeclarationSearchResult.first) {
+                    TOO_MANY_OCCURRENCES  -> mainDeclarationSearchResult.first
+                    FEW_OCCURRENCES -> checkIfInScripts(project, mainDeclarationSearchResult.second)
+                    ZERO_OCCURRENCES -> searchInAlternateNames(project, alternateNames, useScope)
+                }
             }
             return FEW_OCCURRENCES
+        }
+
+        private fun checkIfInScripts(project: Project, files: Collection<VirtualFile>): SearchCostResult {
+            val psiManager = PsiManager.getInstance(project)
+            val script = files.mapNotNull { psiManager.findFile(it) as? KtFile }.firstOrNull { it.findScriptDefinition() != null }
+            if (script != null) {
+//                if (!ScriptConfigurationManager.getInstance(project).updater.ensureConfigurationUpToDate(usedScripts)) {
+//                    return TOO_MANY_OCCURRENCES
+//                }
+                return TOO_MANY_OCCURRENCES
+            } else // if some files are found but none of them in scripts
+                return FEW_OCCURRENCES
+        }
+
+        private fun searchInAlternateNames(project: Project, alternateNames: Sequence<String?>, scope: GlobalSearchScope): SearchCostResult {
+            val psiSearchHelper = PsiSearchHelper.getInstance(project)
+            for (name in alternateNames.filterNotNull()) {
+                val cheapEnoughToSearch = psiSearchHelper.isCheapEnoughToSearch(name, scope, null, null)
+                if (cheapEnoughToSearch != ZERO_OCCURRENCES)
+                    return cheapEnoughToSearch
+            }
+            return ZERO_OCCURRENCES
         }
 
         private fun KtProperty.isSerializationImplicitlyUsedField(): Boolean {

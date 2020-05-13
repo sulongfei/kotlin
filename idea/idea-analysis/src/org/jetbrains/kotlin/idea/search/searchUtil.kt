@@ -16,33 +16,25 @@
 
 package org.jetbrains.kotlin.idea.search
 
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Comparing
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiManager
-import com.intellij.psi.impl.cache.impl.id.IdIndex
-import com.intellij.psi.impl.cache.impl.id.IdIndexEntry
-import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.search.LocalSearchScope
-import com.intellij.psi.search.PsiSearchHelper
-import com.intellij.psi.search.SearchScope
+import com.intellij.psi.impl.search.PsiSearchHelperImpl
+import com.intellij.psi.search.*
+import com.intellij.psi.search.PsiSearchHelper.SearchCostResult
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.util.CommonProcessors
 import com.intellij.util.Processor
-import com.intellij.util.indexing.FileBasedIndex
 import org.jetbrains.kotlin.idea.KotlinFileType
-import org.jetbrains.kotlin.idea.util.application.runReadAction
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtNamedDeclaration
-import org.jetbrains.kotlin.scripting.definitions.findScriptDefinition
 import org.jetbrains.kotlin.types.expressions.OperatorConventions
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -130,44 +122,60 @@ fun PsiSearchHelper.isCheapEnoughToSearchConsideringOperators(
     return isCheapEnoughToSearch(name, scope, fileToIgnoreOccurrencesIn, progress)
 }
 
-fun findScriptsWithUsages(declaration: KtNamedDeclaration, scope: GlobalSearchScope): List<KtFile> {
-    val project = declaration.project
-    val name = declaration.name.takeIf { it?.isNotBlank() == true } ?: return emptyList()
-    return findScriptsWithUsages(name, scope, project)
-}
-
-fun findScriptsWithUsages(name: String, scope: GlobalSearchScope, project: Project): List<KtFile> {
-    val collector = CommonProcessors.CollectProcessor(ArrayList<VirtualFile>())
-    val processor = SearchScriptProcessor(collector, null)
-    runReadAction {
-        FileBasedIndex.getInstance().getFilesWithKey(
-            IdIndex.NAME,
-            setOf(IdIndexEntry(name, true)),
-            processor,
-            scope
-        )
+fun isCheapEnoughToSearchWithScripts(
+    name: String?,
+    scope: GlobalSearchScope,
+    project: Project
+): Pair<SearchCostResult, Collection<VirtualFile>> {
+    val tooManyOccurrences = Pair(SearchCostResult.TOO_MANY_OCCURRENCES, emptyList<VirtualFile>())
+    if (name == null) {
+        return Pair(SearchCostResult.ZERO_OCCURRENCES, emptyList())
     }
-    return collector.results
-        .mapNotNull { PsiManager.getInstance(project).findFile(it) as? KtFile }
-        .filter { it.findScriptDefinition() != null }
-        .toList()
+    if (!ReadAction.compute<Boolean, RuntimeException> { scope.unloadedModulesBelongingToScope.isEmpty() }) {
+        return tooManyOccurrences
+    }
+
+    val processor = SearchScriptProcessor<VirtualFile>()
+    val psiSearchHelper = PsiSearchHelper.getInstance(project)
+    if (psiSearchHelper is PsiSearchHelperImpl) {
+        val searchContext = (UsageSearchContext.IN_CODE + UsageSearchContext.IN_STRINGS + UsageSearchContext.IN_FOREIGN_LANGUAGES).toShort()
+        psiSearchHelper.processFilesWithText(scope, searchContext, true, name, processor)
+        return processor.getResult()
+    }
+    return tooManyOccurrences
 }
 
-
-class SearchScriptProcessor<T : VirtualFile>(val delegateProcessor: Processor<T>, val virtualFileToIgnoreOccurrencesIn: T?) : Processor<T> {
+/*
+    Source: PsiSearchHelperImpl.isCheapEnoughToSearch
+ */
+class SearchScriptProcessor<T : VirtualFile> : Processor<T> {
+    val delegateProcessor = CommonProcessors.CollectProcessor(ArrayList<VirtualFile>())
     private val maxFilesToProcess = Registry.intValue("ide.unused.symbol.calculation.maxFilesToSearchUsagesIn", 10)
     private val maxFilesSizeToProcess = Registry.intValue("ide.unused.symbol.calculation.maxFilesSizeToSearchUsagesIn", 524288)
-    private val filesCount = AtomicInteger()
+    val filesCount = AtomicInteger()
     private val filesSizeToProcess = AtomicLong()
+    private var limitReached = false
 
     override fun process(file: T): Boolean {
         ProgressManager.checkCanceled()
-        if (Comparing.equal(file, virtualFileToIgnoreOccurrencesIn)) return true
-        val currentFilesCount: Int = filesCount.incrementAndGet()
-        val accumulatedFileSizeToProcess: Long = filesSizeToProcess.addAndGet(if (file.isDirectory) 0 else file.length)
+        val currentFilesCount = if (file.isDirectory) filesCount.get() else filesCount.incrementAndGet()
+        val accumulatedFileSizeToProcess = filesSizeToProcess.addAndGet(if (file.isDirectory) 0 else file.length)
         return if (currentFilesCount < maxFilesToProcess && accumulatedFileSizeToProcess < maxFilesSizeToProcess)
             delegateProcessor.process(file)
-        else
+        else {
+            limitReached = true
             false
+        }
+    }
+
+    fun getResult(): Pair<SearchCostResult, Collection<VirtualFile>> {
+        if (limitReached)
+            return Pair(SearchCostResult.TOO_MANY_OCCURRENCES, emptyList())
+        else {
+            if (filesCount.get() == 0)
+                return Pair(SearchCostResult.ZERO_OCCURRENCES, emptyList())
+            else
+                return Pair(SearchCostResult.FEW_OCCURRENCES, delegateProcessor.results)
+        }
     }
 }
