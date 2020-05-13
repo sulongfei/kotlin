@@ -33,6 +33,7 @@ import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil
 import org.jetbrains.kotlin.metadata.jvm.deserialization.ModuleMapping
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.resolve.jvm.AsmTypes
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName
 import org.jetbrains.org.objectweb.asm.*
 import java.io.File
@@ -492,6 +493,7 @@ open class IncrementalJvmCache(
                             val jvmName = name + desc
                             if (jvmName !in inlineFunctions) return
 
+                            dummyClassWriter.visit(-1, 0, "dummy", null, AsmTypes.OBJECT_TYPE.internalName, null)
                             val dummyBytes = dummyClassWriter.toByteArray()!!
                             val hash = dummyBytes.md5()
                             result[jvmName] = hash
