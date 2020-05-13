@@ -110,14 +110,14 @@ class DefaultScriptingSupport(project: Project) : DefaultScriptingSupportBase(pr
     ) {
         val virtualFile = file.originalFile.virtualFile ?: return
 
-        val autoReloadEnabled = KotlinScriptingSettings.getInstance(project).isAutoReloadEnabled
+        if (!ScriptDefinitionsManager.getInstance(project).isReady()) return
+        val scriptDefinition = file.findScriptDefinition() ?: return
+
+        val autoReloadEnabled = KotlinScriptingSettings.getInstance(project).autoReloadConfigurations(scriptDefinition)
         val shouldLoad = isFirstLoad || loadEvenWillNotBeApplied || autoReloadEnabled
         if (!shouldLoad) return
 
         val postponeLoading = isPostponedLoad && !autoReloadEnabled && !isFirstLoad
-
-        if (!ScriptDefinitionsManager.getInstance(project).isReady()) return
-        val scriptDefinition = file.findScriptDefinition() ?: return
 
         val (async, sync) = loaders.partition { it.shouldRunInBackground(scriptDefinition) }
 
@@ -214,9 +214,11 @@ class DefaultScriptingSupport(project: Project) : DefaultScriptingSupportBase(pr
                     saveReports(file, newResult.reports)
                     file.removeScriptDependenciesNotificationPanel(project)
                 } else {
+                    val scriptDefinition = file.findScriptDefinition(project) ?: return
+                    val autoReloadEnabled = KotlinScriptingSettings.getInstance(project).autoReloadConfigurations(scriptDefinition)
                     val autoReload = skipNotification
                             || oldConfiguration == null
-                            || KotlinScriptingSettings.getInstance(project).isAutoReloadEnabled
+                            || autoReloadEnabled
                             || ApplicationManager.getApplication().isUnitTestModeWithoutScriptLoadingNotification
 
                     if (autoReload) {
