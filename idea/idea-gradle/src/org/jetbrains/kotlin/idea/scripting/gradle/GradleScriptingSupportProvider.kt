@@ -10,6 +10,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
+import org.jetbrains.kotlin.idea.core.script.ScriptDefinitionsManager
 import org.jetbrains.kotlin.idea.core.script.configuration.ScriptingSupport
 import org.jetbrains.kotlin.idea.core.script.configuration.ScriptingSupportHelper
 import org.jetbrains.kotlin.idea.core.script.configuration.listener.ScriptConfigurationUpdater
@@ -28,6 +29,7 @@ import org.jetbrains.plugins.gradle.settings.GradleSettingsListener
 import org.jetbrains.plugins.gradle.util.GradleConstants
 import java.io.File
 import java.nio.file.Paths
+import java.util.logging.Logger
 
 /**
  * Creates [GradleScriptingSupport] per each linked Gradle build.
@@ -46,10 +48,14 @@ class GradleScriptingSupportProvider(val project: Project) : ScriptingSupport.Pr
 
     override fun getSupport(file: VirtualFile): ScriptingSupport? {
         if (isGradleKotlinScript(file)) {
-            findRoot(file)?.let { return it }
+            findRoot(file)?.let {
+                logger.info("support for ${file.path} - $it")
+                return it
+            }
 
             val externalProjectSettings = findExternalProjectSettings(file) ?: return null
             if (kotlinDslScriptsModelImportSupported(getGradleVersion(project, externalProjectSettings))) {
+                logger.info("support for ${file.path} - unlinked")
                 return unlinkedFilesSupport
             }
         }
@@ -96,7 +102,10 @@ class GradleScriptingSupportProvider(val project: Project) : ScriptingSupport.Pr
         project.messageBus.connect(project).subscribe(GradleSettingsListener.TOPIC, listener)
     }
 
+    private val logger = Logger.getLogger("#org.jetbrains.kotlin.idea.scripting.gradle")
+
     fun update(build: KotlinDslGradleBuildSync) {
+        logger.info("after sync ${build.workingDir} ${build.models.joinToString() }")
         // fast path for linked gradle builds without .gradle.kts support
         if (build.models.isEmpty()) {
             val root = roots.findRoot(build.workingDir) ?: return
@@ -104,6 +113,7 @@ class GradleScriptingSupportProvider(val project: Project) : ScriptingSupport.Pr
         }
 
         val templateClasspath = findTemplateClasspath(build) ?: return
+        logger.info("getSupport ${templateClasspath.joinToString()}")
         val data = ConfigurationData(templateClasspath, build.models)
         val newSupport = createSupport(build.workingDir) { data } ?: return
         KotlinDslScriptModels.write(newSupport.buildRoot, data)
@@ -156,7 +166,11 @@ class GradleScriptingSupportProvider(val project: Project) : ScriptingSupport.Pr
     private fun findTemplateClasspath(build: KotlinDslGradleBuildSync): List<String>? {
         val anyScript = VfsUtil.findFile(Paths.get(build.models.first().file), true)!!
         // todo: find definition according to build.workingDir
-        val definition = anyScript.findScriptDefinition(project) ?: return null
+
+        val scriptDefinition = anyScript.findScriptDefinition(project)
+        logger.info("findTemplateClasspath scriptDefinition=$scriptDefinition")
+        logger.info("isReady ${ScriptDefinitionsManager.getInstance(project).isReady()}")
+        val definition = scriptDefinition ?: return null
         return definition.asLegacyOrNull<KotlinScriptDefinitionFromAnnotatedTemplate>()
             ?.templateClasspath?.map { it.path }
     }
