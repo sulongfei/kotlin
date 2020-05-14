@@ -6,7 +6,6 @@
 package org.jetbrains.kotlin.fir.backend.generators
 
 import org.jetbrains.kotlin.fir.backend.*
-import org.jetbrains.kotlin.fir.declarations.FirAnonymousFunction
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.FirValueParameter
 import org.jetbrains.kotlin.fir.expressions.*
@@ -420,10 +419,14 @@ internal class CallAndReferenceGenerator(
         if (parameter == null ||
             parameter.returnTypeRef.coneTypeSafe<ConeKotlinType>()?.isBuiltinFunctionalType(session) == true
         ) return this
-        if (argument !is FirLambdaArgumentExpression) return this
-        if (argument.expression !is FirAnonymousFunction) return this
-        if (argument.expression.typeRef == parameter.returnTypeRef) return this
-        val samType = parameter.returnTypeRef.toIrType()
+        val argumentType = argument.typeRef.coneTypeSafe<ConeKotlinType>() ?: return this
+        val parameterType = parameter.returnTypeRef.coneTypeSafe<ConeKotlinType>() ?: return this
+        val argumentClassLikeBound = argumentType.upperBoundIfFlexible() as? ConeClassLikeType ?: return this
+        val parameterClassLikeBound = parameterType.upperBoundIfFlexible() as? ConeClassLikeType ?: return this
+        if (argumentClassLikeBound.lookupTag == parameterClassLikeBound.lookupTag) {
+            return this
+        }
+        val samType = parameterType.toIrType()
         if (!samType.isSamType) return this
         return IrTypeOperatorCallImpl(this.startOffset, this.endOffset, samType, IrTypeOperator.SAM_CONVERSION, samType, this)
     }
