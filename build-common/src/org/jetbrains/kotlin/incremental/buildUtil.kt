@@ -33,6 +33,7 @@ import org.jetbrains.kotlin.utils.addToStdlib.flattenTo
 import java.io.File
 import java.util.*
 import kotlin.collections.HashSet
+import kotlin.collections.LinkedHashSet
 
 const val DELETE_MODULE_FILE_PROPERTY = "kotlin.delete.module.file.after.build"
 
@@ -218,16 +219,27 @@ fun withSubtypes(
     typeFqName: FqName,
     caches: Iterable<IncrementalCacheCommon>
 ): Set<FqName> {
-    val types = LinkedList(listOf(typeFqName))
+    val types = LinkedHashSet(listOf(typeFqName))
     val subtypes = hashSetOf<FqName>()
 
+    fun <T> LinkedHashSet<T>.pollFirst(): T? {
+        val it = iterator()
+        return if (it.hasNext()) {
+            val value = it.next()
+            it.remove()
+            value
+        } else {
+            null
+        }
+    }
+
     while (types.isNotEmpty()) {
-        val unprocessedType = types.pollFirst()
+        val unprocessedType = types.pollFirst() ?: break
 
         caches.asSequence()
             .flatMap { it.getSubtypesOf(unprocessedType) }
             .filter { it !in subtypes }
-            .forEach { types.addLast(it) }
+            .forEach { types.add(it) }
 
         subtypes.add(unprocessedType)
     }
